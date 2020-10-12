@@ -121,7 +121,7 @@ int cliente_modificar(sCliente* lista,int len)
 	int ok=1;
 	if(lista!=NULL && len>0)
 	{
-		if(!utn_getInt("\nindique el ID:", "\nError, el iD es invalido",&aux.id , 3, len, 1))
+		if(!utn_getInt("\nindique el ID:", "\nError, el iD es invalido",&aux.id , 3, 99999999, 1))
 		{
 			if(!cliente_buscarOcurrenciaId(lista, len, aux.id, &indice))
 			{
@@ -172,6 +172,9 @@ int cliente_modificar(sCliente* lista,int len)
 						break;
 					}
 				}while(ok);
+			}
+			else{
+				printf("\n el ID ingresado No existe!!!!");
 			}
 		}
 	}
