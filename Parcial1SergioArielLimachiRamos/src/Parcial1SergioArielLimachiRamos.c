@@ -13,6 +13,7 @@
 #include "utn.h"
 #include "cliente.h"
 #include "publicacion.h"
+#include "informe.h"
 #define TAM_ctes 100
 #define TAM_pub 1000
 
@@ -60,7 +61,7 @@ int main(void) {
 				case 4:
 					if(cliente_buscarLibreUocupado(clientes, TAM_ctes, 0)!=-1)
 					{
-						publicacion_publicar(publicaciones, TAM_pub, clientes, TAM_ctes);
+						publicar(publicaciones, TAM_pub, clientes, TAM_ctes);
 					}
 					else{
 						printf("\nerror, no hay datos Cargados");

@@ -22,5 +22,7 @@ int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP, int len)
 int rubro_buscarLibreUocupado(sRubro * lista, int len, int estado);
 int rubro_add(sRubro* lista, int len, int rubro);
 int informe_rubroConMasAvisos(sPublicacion* lista, int len);
+///publicar esta aca por que en publicacion.h me tira error
+int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte);
 
 #endif /* INFORME_H_ */

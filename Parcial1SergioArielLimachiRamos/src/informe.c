@@ -12,6 +12,16 @@
 #include "publicacion.h"
 #include "informe.h"
 
+/**
+ * /brief imprime un menu de informes y imprime los resultados
+ * /param sCliente* es el array de cliente
+ * /param int es el tamaño del array de cliente
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
 {
 	int opc=123;
@@ -36,6 +46,16 @@ void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
 	}while(opc!=4);
 
 }
+/**
+ * /brief imprime al cliente Con mas avisos
+ * /param sCliente* es el array de cliente
+ * /param int es el tamaño del array de cliente
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int informe_buscarClienteconmasAvisos(sCliente* listCte, int lenCte, sPublicacion* listP, int lenP)
 {
 	int r=-1;
@@ -65,6 +85,15 @@ int informe_buscarClienteconmasAvisos(sCliente* listCte, int lenCte, sPublicacio
 	}
 	return r;
 }
+
+/**
+ * /brief imprime la cantidad de publicaciones en estado Pausado
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int informe_avisosPausados(sPublicacion* lista, int len)
 {
 	int r=-1;
@@ -77,6 +106,15 @@ int informe_avisosPausados(sPublicacion* lista, int len)
 	}
 	return r;
 }
+
+/**
+ * /brief imprime la cantidad de publicacion en estado Activa
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int informe_avisosActivos(sPublicacion* lista, int len)
 {
 	int r=-1;
@@ -89,6 +127,14 @@ int informe_avisosActivos(sPublicacion* lista, int len)
 	}
 	return r;
 }
+/**
+ * /brief imprime el Rubro con mas Avisos y la Cantidad de avisos
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int informe_rubroConMasAvisos(sPublicacion* lista, int len)
 {
 	int r=-1;
@@ -118,6 +164,14 @@ int informe_rubroConMasAvisos(sPublicacion* lista, int len)
 	}
 	return r;
 }
+/**
+ * /brief inicializa el array de rubro isEmpty(1)
+ * /param sRubro* es el array de rubro
+ * /param int es el tamaño del array
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int rubro_init(sRubro* lista, int len)
 {
 	int r=-1;
@@ -131,6 +185,15 @@ int rubro_init(sRubro* lista, int len)
 	}
 	return r;
 }
+/**
+ * /brief carga la lista de rubros
+ * /param sRubro* ese el array de rubro
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP, int len)
 {
 	int r=-1;
@@ -147,6 +210,16 @@ int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP, int len)
 	}
 	return r;
 }
+
+/**
+ * /brief valida si un rubro ya esta en la lista
+ * /param sRubro* es el array de rubro
+ * /param int es el tamaño del array
+ * /param int es el rubro del cual se pregunta si esta o no en la lista
+ *
+ * /return (-1)NO esta (0)SI esta
+ *
+ */
 int rubro_noEstaEnlaLista(sRubro* lista, int len, int rubro)
 {
 	int r=-1;
@@ -162,6 +235,15 @@ int rubro_noEstaEnlaLista(sRubro* lista, int len, int rubro)
 	}
 	return r;
 }
+/**
+ * /brief busca una pocicion libre u ocupada en el array de rubros y lo retorna
+ * /param sRubro* es el array de rubro
+ * /param int es el tamaño del array
+ * /param int es el lo que buscara en el array (1)libre (0)ocupado
+ *
+ * /return (-1)error (el indice en el cual encontro la 1ra ocurrencia)OK
+ *
+ */
 int rubro_buscarLibreUocupado(sRubro * lista, int len, int estado)
 {
 	int r=-1;
@@ -178,6 +260,17 @@ int rubro_buscarLibreUocupado(sRubro * lista, int len, int estado)
 		}
 	return r;
 }
+
+
+/**
+ * /brief agrega un rubro a al array
+ * /param sRubro* es el array de rubro
+ * /param int es el tamaño del array
+ * /param int es el numero de rubro
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int rubro_add(sRubro* lista, int len, int rubro)
 {
 	int r=-1;
@@ -190,6 +283,52 @@ int rubro_add(sRubro* lista, int len, int rubro)
 			r=0;
 			lista[indice].numRubro=rubro;
 			lista[indice].isEmpty=0;
+		}
+	}
+	return r;
+}
+
+/**
+ * /brief realiza el alta de una publicacion
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ * /param sCliente* es el array de cliente
+ * /param int es el tamaño del array de cliente
+ *
+ * /return (-1)error (0)OK
+ *
+ */
+int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte)
+{
+	int r=-1;
+	int todoOk=1;
+	sPublicacion aux;
+	if(lista!=NULL && len>0)
+	{
+		if(publicacion_buscarLibreUocupado(lista, len,1)!=-1)
+		{
+			if(todoOk==1 && (utn_getInt("\nindique un ID de algun Cliente","\nerror, el tipo no es valido", &aux.idCliente, 3, 1000, 1)|| cliente_buscarOcurrenciaId(listaCte, lenCte,aux.idCliente, &aux.numRubro)))
+			{
+				todoOk=0;
+			}
+			if(todoOk==1 && (utn_getInt("\nindique el Numero de Rubro:", "\nerror,rubro no valido", &aux.numRubro, 3, 999999999, 1)))
+			{
+				todoOk=0;
+			}
+			if(todoOk==1 && (utn_pedirCadenadeUndeunDeterminadoTam(aux.textodeAviso, "\nindique el Texto(no debe supera los 63 Caracteres):", 3, 63, 1)))
+			{
+				todoOk=0;
+			}
+			if(todoOk)
+			{
+				r=0;
+				aux.id=publicacion_generarId();
+				publicacion_add(lista, len,aux.id , aux.idCliente, aux.numRubro, aux.textodeAviso);
+				printf("\n Su Numero de ID es: %d",aux.id);
+			}
+		}
+		else{
+			printf("\n !!!!Registro lleno, no se pueden cargar mas empleados");
 		}
 	}
 	return r;

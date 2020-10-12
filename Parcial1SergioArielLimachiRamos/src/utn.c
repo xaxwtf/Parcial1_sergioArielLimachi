@@ -291,6 +291,14 @@ int utn_esAlfanumerico(char *vec)
 	    return r;
 
 	}
+
+/**
+ * /brief Recibe una cadena de caracteres y valida que sean un cuit
+ * /param char* es la cadena a ser analizada
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int utn_esCuit(char *vec)
 {
 	int r=0;
@@ -317,6 +325,18 @@ int utn_esCuit(char *vec)
 	 }
 	return r;
 }
+
+/**
+ * /brief solicita al usuario una cadena de caracteres de un tamaño determinado y lo guarda
+ * /param char* es la direcion de memoria donde se guardara la cadena de caracteres
+ * /param char* es el mensaje a mostrar al pedir la cadena
+ * /param int son la cantidad de intentos de los que dispondra el usuario para ingresar la cadena del tamaño solicitado
+ * /param int es la cantidad Maxima de caracteres que tendra la cadena
+ *  /param int es la cantidad minima de caracteres que tendra la cadena.
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int utn_pedirCadenadeUndeunDeterminadoTam(char* cadena,char* mensaje, int intentos, int tamMax, int tamMin)
 {
 	int r=-1;
@@ -342,6 +362,14 @@ int utn_pedirCadenadeUndeunDeterminadoTam(char* cadena,char* mensaje, int intent
 	}
 	return r;
 }
+/**
+ * /brief Recibe una cadena de caracteres y la modifica aumentandole 1 pocicion de la tabla ascii a todas sus pociciones
+ * /param char* es la cadena a ser modificada
+ * /param int es el tamaño de la cadena
+ *
+ * /return
+ *
+ */
 void utn_cambiarLetrasString(char* algo, int len)
 {
 	for(int i=0;i<len;i++)
@@ -349,6 +377,13 @@ void utn_cambiarLetrasString(char* algo, int len)
 			algo[i]=algo[i]+1;
 		}
 	}
+/**
+ * /brief Recibe un un Cuit y lo modifica Sumandole 1 a cada una de sus pociciones
+ * /param char* es el cuit a ser modificado
+ *
+ * /return
+ *
+ */
 void utn_cambiarCaracteresCuit(char* cuit)
 {
 		for(int i=0;i<13;i++)

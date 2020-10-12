@@ -31,7 +31,6 @@ int cliente_buscarOcurrenciaIdv2(sCliente* lista, int len, int id);
 int cliente_imprimirUnCliente(sCliente* cliente);
 int cliente_baja(sCliente* lista, int len, sPublicacion* listP ,int lenP);
 int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP);
-int publicacion_publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte);
 void Cliente_forzar5elementos(sCliente* lista, int len);
 void cliente_generarUnCuit(char* cuit);
 

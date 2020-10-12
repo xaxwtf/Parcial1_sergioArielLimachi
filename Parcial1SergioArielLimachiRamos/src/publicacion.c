@@ -14,6 +14,15 @@
 #define activa 1
 #define pausada 0
 #define tam_txt 63
+
+/**
+ * /brief imprime toda la publicacion del array
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_listar(sPublicacion* lista, int len)
 {
 	int r=-1;
@@ -31,6 +40,15 @@ int publicacion_listar(sPublicacion* lista, int len)
 	}
 	return r;
 }
+
+/**
+ * /brief inicializa el array de publicacion(isEmpty =1)
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_init(sPublicacion* lista, int len)
 {
 	int r=-1;
@@ -44,6 +62,15 @@ int publicacion_init(sPublicacion* lista, int len)
 	}
 	return r;
 }
+
+/**
+ * /brief cambia el estado de una publicacion a "pausada(0)"
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_pausar(sPublicacion* lista,int len)
 {
 	int r=-1;
@@ -89,6 +116,14 @@ int publicacion_pausar(sPublicacion* lista,int len)
 	}
 	return r;
 }
+/**
+ * /brief cambia el estado de una publicacion a "activa(0)"
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_reanudar(sPublicacion* lista,int len)
 {
 	int r=-1;
@@ -134,12 +169,28 @@ int publicacion_reanudar(sPublicacion* lista,int len)
 	}
 	return r;
 }
+/**
+ * /brief genera un Id unico para una publicacion y la retorna
+ *
+ * /return (-1)error (el ID generado)OK
+ *
+ */
 int publicacion_generarId(void)
 {
 	static int id=0;
 	id=id+1;
 	return id;
 }
+/**
+ * /brief busca una publicacion por ID en el array y guarda la pocicion donde la encontro
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ * /param int es el Id que que se usara de referencia al buscar
+ * /param int* es la direcion de memoria donde guardara el indice
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_buscarOcurrenciaId(sPublicacion* lista, int len, int id, int* indice)
 {
 	int r=-1;
@@ -157,6 +208,15 @@ int publicacion_buscarOcurrenciaId(sPublicacion* lista, int len, int id, int* in
 	}
 	return r;
 }
+/**
+ * /brief ordena el array de publicacion por nombre
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ * /param int es el orden por el cual ordenara
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_ordenarxNombre(sPublicacion* lista, int len, int order)
 {
 	int r=-1;
@@ -183,6 +243,18 @@ int publicacion_ordenarxNombre(sPublicacion* lista, int len, int order)
 	}
 	return r;
 }
+/**
+ * /brief agrega una publicacion al array
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ * /param int es el Id de la publicacion
+ * /param int es el IdCLiente de la publicacion
+ * /param int es el rubro de la publicacion
+ * /param char* es el texto de la publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_add(sPublicacion* list, int len, int id, int idCliente, int rubro,char* texto)
 {
 	int r=-1;
@@ -200,6 +272,15 @@ int publicacion_add(sPublicacion* list, int len, int id, int idCliente, int rubr
 	}
  return r;
 }
+/**
+ * /brief remueve una publicacion del array buscandola por iD
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ * /param int es el Id de la publicacion a remover
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_remove(sPublicacion* list, int len, int id)
 {
 	int r=-1;
@@ -211,6 +292,13 @@ int publicacion_remove(sPublicacion* list, int len, int id)
  return r;
 }
 
+/**
+ * /brief imprime los datos de una publicacion
+ * /param sPublicacion* es la direcion de memoria de una publicacion
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_imprimirUno(sPublicacion* publicacion)
 {
 	int r=-1;
@@ -221,6 +309,16 @@ int publicacion_imprimirUno(sPublicacion* publicacion)
 	}
 	return r;
 }
+
+/**
+ * /brief busca una pocicion libre u ocupada en el array y la retorna
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es el estado del isEmpty que buscara (1)libre (0) Ocupado
+ *
+ * /return (-1)error (el indice donde encontro la 1ra ocurrencia)OK
+ *
+ */
 int publicacion_buscarLibreUocupado(sPublicacion * lista, int len, int estado)
 {
 	int r=-1;
@@ -237,6 +335,17 @@ int publicacion_buscarLibreUocupado(sPublicacion * lista, int len, int estado)
 		}
 	return r;
 }
+
+/**
+ * /brief busca una pocicion libre u ocupada en el array y la guarda
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es el estado del isEmpty que buscara (1)libre (0) Ocupado
+ * /param int* es la direccion de memoria donde guardara el indice obtenido
+ *
+ * /return (-1)error (el indice donde encontro la 1ra ocurrencia)OK
+ *
+ */
 int publicacion_buscarLibreUocupadov2(sPublicacion * lista, int len, int estado, int* indice)
 {
 	int r=-1;
@@ -255,6 +364,17 @@ int publicacion_buscarLibreUocupadov2(sPublicacion * lista, int len, int estado,
 		}
 	return r;
 }
+
+/**
+ * /brief busca una pocicion libre u ocupada en el array y la guarda
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es el estado del isEmpty que buscara (1)libre (0) Ocupado
+ * /param int* es la direccion de memoria donde guardara el indice obtenido
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista, int len, int id)
 {
 	int r=-1;
@@ -271,6 +391,16 @@ int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista, int len, int id)
 	}
 	return r;
 }
+
+/**
+ * /brief imprime todas las publicaciones de un cliente
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es id del Cliente
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_listarxCliente(sPublicacion* lista, int len, int idCte)
 {
 	int r=-1;
@@ -288,6 +418,15 @@ int publicacion_listarxCliente(sPublicacion* lista, int len, int idCte)
 	}
 	return r;
 }
+/**
+ * /brief remueve todas las publicaciones de un cliente
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es id del Cliente
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int len, int idCte)
 {
 	int r=-1;
@@ -305,6 +444,16 @@ int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int
 	}
 	return r;
 }
+
+/**
+ * /brief realiza un conteo todas las publicaciones de un cliente y retorna la cantidad
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es id del Cliente
+ *
+ * /return (-1)error (la cantidad de publicacion de dichi cliente)OK
+ *
+ */
 int publicacion_contarCantidadAvisosxCliente(sPublicacion* lista, int len, int idCte)
 {
 	int r=-1;
@@ -321,6 +470,16 @@ int publicacion_contarCantidadAvisosxCliente(sPublicacion* lista, int len, int i
 	}
 	return r;
 }
+
+/**
+ * /brief reliaza un conteo  todas las publicaciones en estado activo(1) u pausado(0) y retorna la cantidad
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es el estado que buscara 1(activa) 0(pausada)
+ *
+ * /return (-1)error (la cantidad de publicacion en ese estado)OK
+ *
+ */
 int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado)
 {
 	int r=-1;
@@ -337,6 +496,16 @@ int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado)
 	}
 	return r;
 }
+
+/**
+ * /brief realiza un conteo de publicacion segun un determinado rubro y lo retorna
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array
+ * /param int es el rubro que se buscara
+ *
+ * /return (-1)error (la cantidad de publicaciones de ese rubro)OK
+ *
+ */
 int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro)
 {
 	int r=-1;

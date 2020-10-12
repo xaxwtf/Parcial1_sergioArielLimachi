@@ -12,6 +12,16 @@
 #include "publicacion.h"
 #define tam_string 50
 
+/**
+ * /brief imprime todos los clientes del array
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param sPublicacion* es el array de publicaciones
+ * /param int es el tamaño del array de publicaciones
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP)
 {
 	int r=-1;
@@ -30,6 +40,14 @@ int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP)
 	}
 	return r;
 }
+/**
+ * /brief inicializa el array de cliente
+ * /param sCliente* es el array de cliente
+ * /param int es el tamaño del array de cliente
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_init(sCliente* lista, int len)
 {
 	int r=-1;
@@ -43,6 +61,14 @@ int cliente_init(sCliente* lista, int len)
 	}
 	return r;
 }
+/**
+ * /brief da de alta Un cliente
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_alta(sCliente* lista, int len)
 {
 	int r=-1;
@@ -78,6 +104,15 @@ int cliente_alta(sCliente* lista, int len)
 	}
 	return r;
 }
+
+/**
+ * /brief modifica los datos de un cliente
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_modificar(sCliente* lista,int len)
 {
 	int r=-1;
@@ -142,6 +177,17 @@ int cliente_modificar(sCliente* lista,int len)
 	}
 	return r;
 }
+
+/**
+ * /brief da de Baja a un cliente
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param sPublicacion* es el array de publicaciones
+ * /param int es el tamaño del array de publicaciones
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_baja(sCliente* lista, int len,sPublicacion* publicaciones, int lenP)
 {
 	int r=-1;
@@ -185,12 +231,30 @@ int cliente_baja(sCliente* lista, int len,sPublicacion* publicaciones, int lenP)
 		}
 		return r;
 }
+/**
+ * /brief genera un id Unico para la estructura cliente
+ * /param
+ *
+ * /return el ID generado
+ *
+ */
 int cliente_generarId(void)
 {
 	static int id=0;
 	id=id+1;
 	return id;
 }
+
+/**
+ * /brief Busca un determinado Id en el array de Cliente
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param int es el ID que se buscara en el array de cliente
+ * /param int* es la dirrecion de memoria donde guardara el indice donde encontro el ID
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_buscarOcurrenciaId(sCliente* lista, int len, int id, int* indice)
 {
 	int r=-1;
@@ -208,6 +272,17 @@ int cliente_buscarOcurrenciaId(sCliente* lista, int len, int id, int* indice)
 	}
 	return r;
 }
+
+/**
+ * /brief Busca un determinado Id en el array de Cliente
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param int es el ID que se buscara en el array de cliente
+ * /param
+ *
+ * /return (-1)error (el indice de la pocicion donde encontro el ID)OK
+ *
+ */
 int cliente_buscarOcurrenciaIdv2(sCliente* lista, int len, int id)
 {
 	int r=-1;
@@ -224,6 +299,16 @@ int cliente_buscarOcurrenciaIdv2(sCliente* lista, int len, int id)
 	}
 	return r;
 }
+
+/**
+ * /brief Ordena el Array de Cliente por el Nombre
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param int es el Orden por el cual Ordenara El array 1(acendente) 0(decendente)
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_ordenarxNombre(sCliente* lista, int len, int order)
 {
 	int r=-1;
@@ -266,6 +351,16 @@ int cliente_add(sCliente* list, int len, int id,char* name,char* lastName, char*
 	}
  return r;
 }
+
+/**
+ * /brief busca y remueve un cliente de la lista buscandolo por ID
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param int es el ID de referencia con el que se buscara el cliente
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_remove(sCliente* list, int len, int id)
 {
 	int r=-1;
@@ -276,6 +371,15 @@ int cliente_remove(sCliente* list, int len, int id)
 	}
  return r;
 }
+/**
+ * /brief Realiza una busqueda de la 1ra pocicion Libre(1) u Ocupada(0) del array y la retorna
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param int es el estado del isEmpty que buscara (1)Libre  u 0(Ocupado)
+ *
+ * /return (-1)error (el indice en donde econtro la 1ra concidencia)OK
+ *
+ */
 int cliente_buscarLibreUocupado(sCliente * lista, int len, int estado)
 {
 	int r=-1;
@@ -292,6 +396,17 @@ int cliente_buscarLibreUocupado(sCliente * lista, int len, int estado)
 		}
 	return r;
 }
+
+/**
+ * /brief Realiza una busqueda de la 1ra pocicion Libre(1) u Ocupada(0) del array y la guarda por referencia
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ * /param int es el estado del isEmpty que buscara (1)Libre  u 0(Ocupado)
+ * /param int* es la dirrecion de memoria donde guardara el Indice Obtenido
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_buscarLibreUocupadov2(sCliente * lista, int len, int estado, int* indice)
 {
 	int r=-1;
@@ -310,6 +425,13 @@ int cliente_buscarLibreUocupadov2(sCliente * lista, int len, int estado, int* in
 		}
 	return r;
 }
+/**
+ * /brief Imprime todos los datos de Un cliente
+ * /param sCliente* es la direccion de memoria de un cliente
+ *
+ * /return (-1)error (0)OK
+ *
+ */
 int cliente_imprimirUnCliente(sCliente* cliente)
 {
 	int r=-1;
@@ -320,42 +442,16 @@ int cliente_imprimirUnCliente(sCliente* cliente)
 	}
 	return r;
 }
-int publicacion_publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte)
-{
-	int r=-1;
-	int todoOk=1;
-	sPublicacion aux;
-	if(lista!=NULL && len>0)
-	{
-		if(publicacion_buscarLibreUocupado(lista, len,1)!=-1)
-		{
-			if(todoOk==1 && (utn_getInt("\nindique un ID de algun Cliente","\nerror, el tipo no es valido", &aux.idCliente, 3, 1000, 1)|| cliente_buscarOcurrenciaId(listaCte, lenCte,aux.idCliente, &aux.numRubro)))
-			{
-				todoOk=0;
-			}
-			if(todoOk==1 && (utn_getInt("\nindique el Numero de Rubro:", "\nerror,rubro no valido", &aux.numRubro, 3, 999999999, 1)))
-			{
-				todoOk=0;
-			}
-			if(todoOk==1 && (utn_pedirCadenadeUndeunDeterminadoTam(aux.textodeAviso, "\nindique el Texto(no debe supera los 63 Caracteres):", 3, 63, 1)))
-			{
-				todoOk=0;
-			}
-			if(todoOk)
-			{
-				r=0;
-				aux.id=publicacion_generarId();
-				publicacion_add(lista, len,aux.id , aux.idCliente, aux.numRubro, aux.textodeAviso);
-				printf("\n Su Numero de ID es: %d",aux.id);
-			}
-		}
-		else{
-			printf("\n !!!!Registro lleno, no se pueden cargar mas empleados");
-		}
-	}
-	return r;
-}
 
+
+/**
+ * /brief Realiza la carga de 5 clientes
+ * /param sCliente* es el array de clientes
+ * /param int es el tamaño del array de clientes
+ *
+ * /return
+ *
+ */
 void Cliente_forzar5elementos(sCliente* lista, int len)
 {
 	char name[50]="aaaaaaa";
