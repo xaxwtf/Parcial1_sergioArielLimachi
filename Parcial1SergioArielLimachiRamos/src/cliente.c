@@ -203,7 +203,7 @@ int cliente_baja(sCliente* lista, int len,sPublicacion* publicaciones, int lenP)
 			{
 				if(!cliente_buscarOcurrenciaId(lista, len, aux.id, &indice))
 				{
-					printf("  ID	IDcliente     Rubro Texto");
+					printf("  ID	IDcliente     Rubro   Estado  Texto");
 					publicacion_listarxCliente(publicaciones, lenP, aux.id);
 					r=0;
 					aux=lista[indice];

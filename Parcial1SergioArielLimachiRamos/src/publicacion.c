@@ -29,7 +29,7 @@ int publicacion_listar(sPublicacion* lista, int len)
 	if(lista!=NULL && len>0)
 	{
 		r=0;
-		printf("      Nombre     tipo  direccion     precio de publicidad diario  ID");
+		printf("  ID	IDcliente     Rubro   Estado  Texto");
 		for(int i=0;i<len;i++)
 			{
 				if(!lista[i].isEmpty)
@@ -305,7 +305,13 @@ int publicacion_imprimirUno(sPublicacion* publicacion)
 	if(publicacion!=NULL)
 	{
 		r=0;
-		printf("\n%4d\t%5d\t\t%2d   %s",publicacion->id,publicacion->idCliente,publicacion->numRubro,publicacion->textodeAviso);
+		if(publicacion->estado==pausada)
+		{
+			printf("\n%4d\t%5d\t\t%2d PAUSADA  %s",publicacion->id,publicacion->idCliente,publicacion->numRubro,publicacion->textodeAviso);
+		}
+		else{
+			printf("\n%4d\t%5d\t\t%2d  ACTIVA  %s",publicacion->id,publicacion->idCliente,publicacion->numRubro,publicacion->textodeAviso);
+		}
 	}
 	return r;
 }
