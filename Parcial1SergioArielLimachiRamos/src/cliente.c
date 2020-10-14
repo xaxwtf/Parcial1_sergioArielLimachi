@@ -217,8 +217,8 @@ int cliente_baja(sCliente* lista, int len,sPublicacion* publicaciones, int lenP)
 						utn_getInt(" ", "la opcion indicada no es valida", &opc, 1, 2, 1);
 							switch(opc){
 							case 1:
-								cliente_remove(lista, len, aux.id);
 								publicacion_removertodaslasPublicacionesdeUnCliente(publicaciones, lenP, aux.id);
+								cliente_remove(lista, len, aux.id);
 								ok=0;
 								break;
 							case 2:

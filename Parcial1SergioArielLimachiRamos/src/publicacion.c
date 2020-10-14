@@ -91,6 +91,7 @@ int publicacion_pausar(sPublicacion* lista,int len)
 						printf("\n-----Pausar Publicacion-----ID= %d "
 							"\n -IDCliente : %d"
 							"\n -Rubro: %d"
+							"\n -Estado: Activa"
 							"\n -Texto de Aviso: %s"
 							"\n 1-SI"
 							"\n 2-NO",aux.id,aux.idCliente,aux.numRubro,aux.textodeAviso);
@@ -144,6 +145,7 @@ int publicacion_reanudar(sPublicacion* lista,int len)
 						printf("\n-----Reanudar Publicacion-----ID= %d "
 							"\n -IDCliente : %d"
 							"\n -Rubro: %d"
+							"\n -Estado: Pausada"
 							"\n -Texto de Aviso: %s"
 							"\n 1-SI"
 							"\n 2-NO",aux.id,aux.idCliente,aux.numRubro,aux.textodeAviso);
@@ -527,4 +529,19 @@ int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro)
 			}
 		}
 		return r;
+}
+void publicacion_forzarPublicacion(sPublicacion* lista, int len)
+{
+	publicacion_add(lista, len, publicacion_generarId(), 1, 2530,"algo 1");
+	publicacion_add(lista, len, publicacion_generarId(), 1, 2530,"algo 2");
+	publicacion_add(lista, len, publicacion_generarId(), 1, 2525,"algo 3");
+	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 4");
+	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 5");
+	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 6");
+	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 7");
+	publicacion_add(lista, len, publicacion_generarId(), 3, 2530,"algo 8");
+	publicacion_add(lista, len, publicacion_generarId(), 3, 2525,"algo 9");
+	publicacion_add(lista, len, publicacion_generarId(), 3, 2530,"algo 10");
+	publicacion_add(lista, len, publicacion_generarId(), 4, 3100,"algo 11");
+	publicacion_add(lista, len, publicacion_generarId(), 4, 3100,"algo 12");
 }

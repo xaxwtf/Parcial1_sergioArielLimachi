@@ -24,6 +24,7 @@ int main(void) {
 	publicacion_init(publicaciones, TAM_pub);
 	cliente_init(clientes, TAM_ctes);
 	Cliente_forzar5elementos(clientes, TAM_ctes);
+	publicacion_forzarPublicacion(publicaciones, TAM_pub);
 	do{
 		utn_getInt("\n-----Parcial-----"
 					"\n 1-Alta cliente"
@@ -34,7 +35,8 @@ int main(void) {
 					"\n 6-Reanudar Publicacion"
 					"\n 7-Imprimir Clientes"
 					"\n 8-Informar"
-					"\n 0-salir", "error,la opcion indicada no es valido", &opc, 1, 8, 0);
+					"\n 9-listar Publicaciones"
+					"\n 0-salir", "error,la opcion indicada no es valido", &opc, 1, 9, 0);
 			switch(opc)
 			{
 				case 1:
@@ -103,7 +105,15 @@ int main(void) {
 					else{
 						printf("\nno hay datos Cargados");
 					}
-
+					break;
+				case 9:
+					if(publicacion_buscarLibreUocupado(publicaciones, TAM_pub, 0)!=-1)
+					{
+						publicacion_listar(publicaciones, TAM_pub);
+					}
+					else{
+						printf("\n Error, no hay datos Cargados");
+					}
 					break;
 			}
 	}while(opc!=0);

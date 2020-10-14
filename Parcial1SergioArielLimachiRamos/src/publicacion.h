@@ -36,5 +36,6 @@ int publicacion_pausar(sPublicacion* lista,int len);
 int publicacion_reanudar(sPublicacion* lista,int len);
 int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado);
 int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro);
+void publicacion_forzarPublicacion(sPublicacion* lista, int len);
 
 #endif /* PUBLICACION_H_ */
