@@ -307,6 +307,7 @@ int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte)
 	{
 		if(publicacion_buscarLibreUocupado(lista, len,1)!=-1)
 		{
+			cliente_listar(listaCte, lenCte, lista, len);
 			if(todoOk==1 && (utn_getInt("\nindique un ID de algun Cliente","\nerror, el tipo no es valido", &aux.idCliente, 3, 1000, 1)|| cliente_buscarOcurrenciaId(listaCte, lenCte,aux.idCliente, &aux.numRubro)))
 			{
 				todoOk=0;
