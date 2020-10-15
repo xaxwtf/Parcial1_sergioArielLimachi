@@ -382,6 +382,9 @@ int informe_clienteConMasAvisosActivosUPausados(sPublicacion* listaP,int lenP, s
 			printf("\nel Cliente con mas Avisos Pausados:   Cantidad De avisos %d",cantAvisosMax);
 			cliente_imprimirUnCliente(&aux);
 		}
+		else if(estadoAbuscar==1){
+			printf("\nno hay Publicaciones Activas");
+		}
 		else{
 			printf("\nno hay Publicaciones Pausadas");
 		}
