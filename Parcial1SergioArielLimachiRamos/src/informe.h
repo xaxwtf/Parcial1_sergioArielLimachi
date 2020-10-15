@@ -24,5 +24,5 @@ int rubro_add(sRubro* lista, int len, int rubro);
 int informe_rubroConMasAvisos(sPublicacion* lista, int len);
 ///publicar esta aca por que en publicacion.h me tira error
 int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte);
-
+int informe_clienteConMasAvisosActivosUPausados(sPublicacion* listaP,int lenP, sCliente* listaCte, int lenCte, int estadoAbuscar);
 #endif /* INFORME_H_ */

@@ -30,7 +30,9 @@ void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
 				"\n1-Cliente con más avisos."
 				"\n2-Cantidad de avisos pausados."
 				"\n3-Rubro con mas avisos."
-				"\n4-Atras", "\nla opcion indicada no es valida", &opc, 1, 4, 1);
+				"\n4-Cliente con más avisos Activos"
+				"\n5-Cliente con más avisos Pausados."
+				"\n6-Atras", "\nla opcion indicada no es valida", &opc, 1, 6, 1);
 		switch(opc)
 			{
 				case 1:
@@ -42,8 +44,14 @@ void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
 				case 3:
 					informe_rubroConMasAvisos(listaPub, lenP);
 					break;
+				case 4:
+					informe_clienteConMasAvisosActivosUPausados(listaPub, lenP, listaCte, lenCte, 1);
+					break;
+				case 5:
+					informe_clienteConMasAvisosActivosUPausados(listaPub, lenP, listaCte, lenCte, 0);
+					break;
 			}
-	}while(opc!=4);
+	}while(opc!=6);
 
 }
 /**
@@ -330,6 +338,52 @@ int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte)
 		}
 		else{
 			printf("\n !!!!Registro lleno, no se pueden cargar mas empleados");
+		}
+	}
+	return r;
+}
+
+/**
+ * /brief imprime al cliente con mas avisos pausados o activos y la cantidad de avisos que posee
+ * /param sPublicacion* es el array de publicacion
+ * /param int es el tamaño del array de publicacion
+ * /param sCliente* es el array de cliente
+ * /param int es el tamaño del array de cliente
+ * /param int es lo que se busca y se querra imprimir (1)Activa (0)Pausada
+ *
+ * /return (-1)error (0)OK
+ *
+ */
+int informe_clienteConMasAvisosActivosUPausados(sPublicacion* listaP,int lenP, sCliente* listaCte, int lenCte, int estadoAbuscar)
+{
+	int r=-1;
+	int cantAvisosMax,cantAvisoAct;
+	sCliente aux;
+	if(listaP!=NULL&& listaCte!=NULL && lenCte>0 &&lenP && (estadoAbuscar==0 || estadoAbuscar==1))
+	{
+		r=0;
+		aux=listaCte[0];
+		cantAvisosMax=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, listaCte[0].id, estadoAbuscar);
+		for(int i=1;i<lenCte;i++)
+		{
+			cantAvisoAct=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, listaCte[i].id, estadoAbuscar);
+			if(cantAvisoAct>cantAvisosMax)
+			{
+				aux=listaCte[i];
+				cantAvisosMax=cantAvisoAct;
+			}
+		}
+		if(estadoAbuscar&& cantAvisosMax>0)
+		{
+			printf("\nel Cliente con mas Avisos Activos:   Cantidad De avisos %d",cantAvisosMax);
+			cliente_imprimirUnCliente(&aux);
+		}
+		else if(cantAvisosMax>0){
+			printf("\nel Cliente con mas Avisos Pausados:   Cantidad De avisos %d",cantAvisosMax);
+			cliente_imprimirUnCliente(&aux);
+		}
+		else{
+			printf("\nno hay Publicaciones Pausadas");
 		}
 	}
 	return r;
