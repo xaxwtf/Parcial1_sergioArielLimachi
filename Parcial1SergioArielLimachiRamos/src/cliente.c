@@ -28,13 +28,13 @@ int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP)
 	if(lista!=NULL && len>0)
 	{
 		r=0;
-		printf("\n  ID\tlastName\t  Name\t\tCuit\t\tNumero de avisos Publicados");
+		printf("\n  ID\tlastName\t  Name\t\tCuit\t\tNumero de avisos Activos Publicados");
 		for(int i=0;i<len;i++)
 			{
 				if(!lista[i].isEmpty)
 				{
 					cliente_imprimirUnCliente(&lista[i]);
-					printf("\t\t%d",publicacion_contarCantidadAvisosxCliente(listaP, lenP,lista[i].id));
+					printf("\t\t%d",publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, lista[i].id, 1));
 				}
 			}
 	}

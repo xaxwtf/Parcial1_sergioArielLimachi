@@ -30,7 +30,7 @@ void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
 				"\n1-Cliente con más avisos."
 				"\n2-Cantidad de avisos pausados."
 				"\n3-Rubro con mas avisos."
-				"\n4-Salir", "\nla opcion indicada no es valida", &opc, 1, 4, 1);
+				"\n4-Atras", "\nla opcion indicada no es valida", &opc, 1, 4, 1);
 		switch(opc)
 			{
 				case 1:
@@ -65,12 +65,12 @@ int informe_buscarClienteconmasAvisos(sCliente* listCte, int lenCte, sPublicacio
 	{
 		r=0;
 		cteMasAvisos=listCte[0];
-		cantdePublicacionesMax=publicacion_contarCantidadAvisosxCliente(listP, lenP, cteMasAvisos.id);
+		cantdePublicacionesMax=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listP, lenP, listCte[0].id, 3);
 		for(int i=1;i<lenCte;i++)
 		{
 			if(!listCte[i].isEmpty)
 			{
-				cantPublicaciones=publicacion_contarCantidadAvisosxCliente(listP, lenP, listCte[i].id);
+				cantPublicaciones=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listP, lenP, listCte[0].id, 3);
 				if(cantdePublicacionesMax<cantPublicaciones)
 				{
 					cantdePublicacionesMax=cantPublicaciones;

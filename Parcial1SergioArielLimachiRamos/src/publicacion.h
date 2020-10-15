@@ -31,11 +31,12 @@ int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista, int len, int id);
 int publicacion_imprimirUno(sPublicacion* publicacion);
 int publicacion_listarxCliente(sPublicacion* lista, int len, int idCte);
 int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int len, int idCte);
-int publicacion_contarCantidadAvisosxCliente(sPublicacion* lista, int len, int idCte);
+int publicacion_contarCantidadAvisosPausadosuActivoxCliente(sPublicacion* lista, int len, int idCte,int estadoAbuscar);
 int publicacion_pausar(sPublicacion* lista,int len);
 int publicacion_reanudar(sPublicacion* lista,int len);
 int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado);
 int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro);
 void publicacion_forzarPublicacion(sPublicacion* lista, int len);
+int ordenarx2criterios(sPublicacion* list, int len, int order);
 
 #endif /* PUBLICACION_H_ */

@@ -458,19 +458,24 @@ int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int
  * /param sPublicacion* es el array de publicacion
  * /param int es el tamaño del array
  * /param int es id del Cliente
+ * /param int es el estado que buscara (1)activa (0)pausada (3)no discrimina ninguno
  *
  * /return (-1)error (la cantidad de publicacion de dichi cliente)OK
  *
  */
-int publicacion_contarCantidadAvisosxCliente(sPublicacion* lista, int len, int idCte)
+int publicacion_contarCantidadAvisosPausadosuActivoxCliente(sPublicacion* lista, int len, int idCte,int estadoAbuscar)
 {
 	int r=-1;
-	if(lista!=NULL&& len>0)
+	if(lista!=NULL&& len>0 &&(estadoAbuscar==activa || estadoAbuscar==pausada || estadoAbuscar==3))
 	{
 		r=0;
 		for(int i=0;i<len;i++)
 		{
-			if(lista[i].idCliente==idCte && lista[i].isEmpty==0)
+			if((estadoAbuscar==0 || estadoAbuscar==1) && lista[i].idCliente==idCte && lista[i].isEmpty==0 && lista[i].estado==estadoAbuscar)
+			{
+				r++;
+			}
+			else if(estadoAbuscar==3 && lista[i].idCliente==idCte && lista[i].isEmpty==0)
 			{
 				r++;
 			}
@@ -544,4 +549,35 @@ void publicacion_forzarPublicacion(sPublicacion* lista, int len)
 	publicacion_add(lista, len, publicacion_generarId(), 3, 2530,"algo 10");
 	publicacion_add(lista, len, publicacion_generarId(), 4, 3100,"algo 11");
 	publicacion_add(lista, len, publicacion_generarId(), 4, 3100,"algo 12");
+}
+int ordenarx2criterios(sPublicacion* list, int len, int order)
+{
+	int r=-1;
+	sPublicacion aux;
+	int flagSwap=1;
+		if(list!=NULL && len > 0 && (order==0|| order==1))
+		{
+			r=0;
+			do{
+				flagSwap=0;
+				for(int i=0;i<len;i++)
+				{
+					if((order==1 && (list[i].isEmpty==0 && list[i+1].isEmpty==0) && (strncmp(list[i].textodeAviso,list[i+1].textodeAviso,tam_txt)>0
+																||
+									(strncmp(list[i].textodeAviso,list[i+1].textodeAviso,tam_txt)==0 && list[i].numRubro > list[i+1].numRubro)))
+						||
+					(order==0 && (list[i].isEmpty==0 && list[i+1].isEmpty==0) && (strncmp(list[i].textodeAviso,list[i+1].textodeAviso,tam_txt)<0
+																||
+								(strncmp(list[i].textodeAviso,list[i+1].textodeAviso,tam_txt)==0 && list[i].numRubro<list[i+1].numRubro))))
+					{
+						aux= list[i];
+						list[i]=list[i+1];
+						list[i+1]=aux;
+						flagSwap=1;
+					}
+				}
+			}while(flagSwap);
+		}
+		return r;
+ return 0;
 }
