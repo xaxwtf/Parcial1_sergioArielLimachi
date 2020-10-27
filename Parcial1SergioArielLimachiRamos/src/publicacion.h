@@ -24,7 +24,7 @@ int publicacion_generarId(void);
 int publicacion_buscarOcurrenciaId(sPublicacion* lista[], int len, int id, int* indice);
 int publicacion_ordenarxNombre(sPublicacion* lista, int len, int order);
 int publicacion_add(sPublicacion* lista[],int len, sPublicacion* publicacion);
-int publicacion_remove(sPublicacion* list, int len, int id);
+int publicacion_remove(sPublicacion* list[], int len, int id);
 int publicacion_buscarLibreUocupado(sPublicacion * lista[], int len, int estado);
 int publicacion_buscarLibreUocupadov2(sPublicacion * lista[], int len, int estado, int* indice);
 int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista[], int len, int id);

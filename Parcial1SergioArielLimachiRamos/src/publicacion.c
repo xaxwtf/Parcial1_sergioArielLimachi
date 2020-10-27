@@ -274,13 +274,18 @@ int publicacion_add(sPublicacion* lista[],int len, sPublicacion* publicacion)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_remove(sPublicacion* list, int len, int id)
+int publicacion_remove(sPublicacion* list[], int len, int id)
 {
 	int r=-1;
+	int indice;
 	if(list!=NULL && len>0 && id>0)
 	{
-		list[publicacion_buscarOcurrenciaIdv2(list, len, id)].isEmpty=1;
-		r=0;
+		if(publicacion_buscarOcurrenciaId(list, len, id, &indice)!=-1)
+		{
+			publicacion_delete(list[indice]);
+			list[indice]=NULL;
+			r=0;
+		}
 	}
  return r;
 }
@@ -628,11 +633,15 @@ sPublicacion* publicacion_new(int id, int idCte, char* txtAviso, int rubro, int 
 	sPublicacion* nuevo= (sPublicacion*)malloc(sizeof(sPublicacion));
 	if(nuevo!=NULL)
 	{
-		publicacion_set_id(nuevo, id);
-		publicacion_set_idCliente(nuevo, idCte);
-		publicacion_set_textodeAviso(nuevo, txtAviso);
-		publicacion_set_numRubro(nuevo, rubro);
-		publicacion_set_estado(nuevo, estado);
+		if(!(publicacion_set_id(nuevo, id)!=-1 &&
+				publicacion_set_idCliente(nuevo, idCte)!=-1&&
+				publicacion_set_textodeAviso(nuevo, txtAviso)!=-1&&
+				publicacion_set_numRubro(nuevo, rubro)!=-1 &&
+				publicacion_set_estado(nuevo, estado)!=-1))
+		{
+			publicacion_delete(nuevo);
+			nuevo=NULL;
+		}
 	}
 	return nuevo;
 }

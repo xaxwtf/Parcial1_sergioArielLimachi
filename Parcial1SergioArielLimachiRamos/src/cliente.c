@@ -524,10 +524,14 @@ sCliente* cliente_new(int id, char* cuit, char* name, char* lastName)
 	sCliente* nuevo=(sCliente*)malloc(sizeof(sCliente));
 	if(nuevo!=NULL && id>0)
 	{
-		cliente_set_id(nuevo, id);
-		cliente_set_cuit(nuevo, cuit);
-		cliente_set_name(nuevo, name);
-		cliente_set_lastName(nuevo, lastName);
+		if(!(cliente_set_id(nuevo, id)!=-1 &&
+			cliente_set_cuit(nuevo, cuit)!=-1 &&
+			cliente_set_name(nuevo, name)!=-1 &&
+			cliente_set_lastName(nuevo, lastName)!=-1))
+		{
+			cliente_delete(nuevo);
+			nuevo=NULL;
+		}
 	}
 	return nuevo;
 }
@@ -585,6 +589,7 @@ int cliente_set_id(sCliente* elemento, int id)
 	int r=-1;
 	if(elemento!=NULL && id>0)
 	{
+		r=0;
 		elemento->id=id;
 	}
 	return r;

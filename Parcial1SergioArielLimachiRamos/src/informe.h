@@ -15,7 +15,7 @@ typedef struct{
 void informar(sCliente* listaCte[], int lenCte, sPublicacion* listaPub[], int lenP);
 int informe_buscarClienteconmasAvisos(sCliente* listCte[], int lenCte, sPublicacion* listP[], int lenP);
 int informe_avisosPausados(sPublicacion* lista[], int len);
-int informe_avisosActivos(sPublicacion* lista, int len);
+int informe_avisosActivos(sPublicacion* lista[], int len);
 int rubro_init(sRubro* lista, int len);
 int rubro_noEstaEnlaLista(sRubro* lista, int len, int rubro);
 int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP[], int len);

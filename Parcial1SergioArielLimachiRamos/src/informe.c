@@ -123,7 +123,7 @@ int informe_avisosPausados(sPublicacion* lista[], int len)
  * /return (-1)error (0)OK
  *
  */
-int informe_avisosActivos(sPublicacion* lista, int len)
+int informe_avisosActivos(sPublicacion* lista[], int len)
 {
 	int r=-1;
 	int cantAvisosActivos;
