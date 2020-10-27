@@ -23,7 +23,7 @@
  * /return (-1)error (0)OK
  *
  */
-int publicacion_listar(sPublicacion* lista, int len)
+int publicacion_listar(sPublicacion* lista[], int len)
 {
 	int r=-1;
 	if(lista!=NULL && len>0)
@@ -32,9 +32,9 @@ int publicacion_listar(sPublicacion* lista, int len)
 		printf("  ID	IDcliente     Rubro   Estado  Texto");
 		for(int i=0;i<len;i++)
 			{
-				if(!lista[i].isEmpty)
+				if(lista[i]!=NULL)
 				{
-					publicacion_imprimirUno(&lista[i]);
+					publicacion_imprimirUno(lista[i]);
 				}
 			}
 	}
@@ -49,7 +49,7 @@ int publicacion_listar(sPublicacion* lista, int len)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_init(sPublicacion* lista, int len)
+int publicacion_init(sPublicacion* lista[], int len)
 {
 	int r=-1;
 	if(lista!=NULL && len>0)
@@ -57,7 +57,7 @@ int publicacion_init(sPublicacion* lista, int len)
 		r=0;
 		for(int i=0;i<len;i++)
 		{
-			lista[i].isEmpty=1;
+			lista[i]=NULL;
 		}
 	}
 	return r;
@@ -71,21 +71,19 @@ int publicacion_init(sPublicacion* lista, int len)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_pausar(sPublicacion* lista,int len)
+int publicacion_pausar(sPublicacion* lista[],int len)
 {
 	int r=-1;
-	sPublicacion aux;
-	int indice,opc;
+	int indice,opc,id;
 	int ok=1;
 	if(lista!=NULL && len>0)
 	{
-		if(!utn_getInt("\nindique el ID de la publicacion:", "\nError, el iD es invalido",&aux.id , 3, 99999999, 1))
+		if(!utn_getInt("\nindique el ID de la publicacion:", "\nError, el iD es invalido",&id , 3, 99999999, 1))
 		{
-			if(!publicacion_buscarOcurrenciaId(lista, len, aux.id, &indice))
+			if(!publicacion_buscarOcurrenciaId(lista, len, id, &indice))
 			{
 				r=0;
-				aux=lista[indice];
-				if(aux.estado==activa)
+				if(publicacion_get_estado(lista[indice])==activa)
 				{
 					do{
 						printf("\n-----Pausar Publicacion-----ID= %d "
@@ -94,13 +92,12 @@ int publicacion_pausar(sPublicacion* lista,int len)
 							"\n -Estado: Activa"
 							"\n -Texto de Aviso: %s"
 							"\n 1-SI"
-							"\n 2-NO",aux.id,aux.idCliente,aux.numRubro,aux.textodeAviso);
+							"\n 2-NO",lista[indice]->id,lista[indice]->idCliente,lista[indice]->numRubro,lista[indice]->textodeAviso);
 						utn_getInt(" " ,"\nerror, la Opcion indicada no es valida", &opc, 1, 2, 1);
 						switch(opc){
 							case 1:
 								ok=0;
-								aux.estado=pausada;
-								lista[indice]=aux;
+								publicacion_set_estado(lista[indice], pausada);
 								break;
 							case 2:
 								ok=0;
@@ -125,21 +122,19 @@ int publicacion_pausar(sPublicacion* lista,int len)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_reanudar(sPublicacion* lista,int len)
+int publicacion_reanudar(sPublicacion* lista[],int len)
 {
 	int r=-1;
-	sPublicacion aux;
-	int indice,opc;
+	int indice,opc,id;
 	int ok=1;
 	if(lista!=NULL && len>0)
 	{
-		if(!utn_getInt("\nindique el ID de la publicacion:", "\nError, el iD es invalido",&aux.id , 3, 99999999, 1))
+		if(!utn_getInt("\nindique el ID de la publicacion:", "\nError, el iD es invalido",&id , 3, 99999999, 1))
 		{
-			if(!publicacion_buscarOcurrenciaId(lista, len, aux.id, &indice))
+			if(!publicacion_buscarOcurrenciaId(lista, len, id, &indice))
 			{
 				r=0;
-				aux=lista[indice];
-				if(aux.estado==pausada)
+				if(publicacion_get_estado(lista[indice])==pausada)
 				{
 					do{
 						printf("\n-----Reanudar Publicacion-----ID= %d "
@@ -148,13 +143,12 @@ int publicacion_reanudar(sPublicacion* lista,int len)
 							"\n -Estado: Pausada"
 							"\n -Texto de Aviso: %s"
 							"\n 1-SI"
-							"\n 2-NO",aux.id,aux.idCliente,aux.numRubro,aux.textodeAviso);
+							"\n 2-NO",lista[indice]->id,lista[indice]->idCliente,lista[indice]->numRubro,lista[indice]->textodeAviso);
 						utn_getInt(" " ,"\nerror, la Opcion indicada no es valida", &opc, 1, 2, 1);
 						switch(opc){
 							case 1:
 								ok=0;
-								aux.estado=activa;
-								lista[indice]=aux;
+								publicacion_set_estado(lista[indice], activa);
 								break;
 							case 2:
 								ok=0;
@@ -193,14 +187,14 @@ int publicacion_generarId(void)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_buscarOcurrenciaId(sPublicacion* lista, int len, int id, int* indice)
+int publicacion_buscarOcurrenciaId(sPublicacion* lista[], int len, int id, int* indice)
 {
 	int r=-1;
 	if(lista!=NULL && len>0 && id>0 && indice!=NULL)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(id==lista[i].id)
+			if(id==publicacion_get_id(lista[i]))
 			{
 				r=0;
 				*indice=i;
@@ -257,20 +251,17 @@ int publicacion_ordenarxNombre(sPublicacion* lista, int len, int order)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_add(sPublicacion* list, int len, int id, int idCliente, int rubro,char* texto)
+int publicacion_add(sPublicacion* lista[],int len, sPublicacion* publicacion)
 {
 	int r=-1;
 	int indice;
-	if(list!=NULL && len>0 && id>0 && idCliente>0 && texto!=NULL)
+	if(lista!=NULL && publicacion!=NULL)
 	{
-		publicacion_buscarLibreUocupadov2(list, len, 1,&indice);
-		list[indice].id=id;
-		list[indice].isEmpty=0;
-		list[indice].estado=activa;
-		list[indice].idCliente=idCliente;
-		list[indice].numRubro=rubro;
-		strncpy(list[indice].textodeAviso,texto,tam_txt);
-		r=0;
+		if(publicacion_buscarLibreUocupadov2(lista, len, 1,&indice)!=-1)
+		{
+			lista[indice]=publicacion;
+			r=0;
+		}
 	}
  return r;
 }
@@ -327,14 +318,14 @@ int publicacion_imprimirUno(sPublicacion* publicacion)
  * /return (-1)error (el indice donde encontro la 1ra ocurrencia)OK
  *
  */
-int publicacion_buscarLibreUocupado(sPublicacion * lista, int len, int estado)
+int publicacion_buscarLibreUocupado(sPublicacion * lista[], int len, int estado)
 {
 	int r=-1;
 		if(lista!=NULL && len>0&& (estado==1 || estado==0))
 		{
 			for(int i=0;i<len;i++)
 			{
-				if(lista[i].isEmpty==estado)
+				if((estado==1 && lista[i]==NULL)|| (estado==0 && lista[i]!=NULL))
 				{
 					r=i;
 					break;
@@ -354,7 +345,7 @@ int publicacion_buscarLibreUocupado(sPublicacion * lista, int len, int estado)
  * /return (-1)error (el indice donde encontro la 1ra ocurrencia)OK
  *
  */
-int publicacion_buscarLibreUocupadov2(sPublicacion * lista, int len, int estado, int* indice)
+int publicacion_buscarLibreUocupadov2(sPublicacion * lista[], int len, int estado, int* indice)
 {
 	int r=-1;
 		if(lista!=NULL && len>0&& (estado==1 || estado==0))
@@ -362,7 +353,7 @@ int publicacion_buscarLibreUocupadov2(sPublicacion * lista, int len, int estado,
 
 			for(int i=0;i<len;i++)
 			{
-				if(lista[i].isEmpty==estado)
+				if((estado==1 && lista[i]==NULL)|| (estado==0 && lista[i]!= NULL))
 				{
 					r=0;
 					*indice=i;
@@ -383,14 +374,14 @@ int publicacion_buscarLibreUocupadov2(sPublicacion * lista, int len, int estado,
  * /return (-1)error (0)OK
  *
  */
-int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista, int len, int id)
+int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista[], int len, int id)
 {
 	int r=-1;
 	if(lista!=NULL && len>0 && id>0)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(id==lista[i].id)
+			if(id==publicacion_get_id(lista[i]))
 			{
 				r=i;
 				break;
@@ -409,7 +400,7 @@ int publicacion_buscarOcurrenciaIdv2(sPublicacion* lista, int len, int id)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_listarxCliente(sPublicacion* lista, int len, int idCte)
+int publicacion_listarxCliente(sPublicacion* lista[], int len, int idCte)
 {
 	int r=-1;
 	if(lista!=NULL && len>0)
@@ -417,10 +408,10 @@ int publicacion_listarxCliente(sPublicacion* lista, int len, int idCte)
 
 		for(int i=0;i<len;i++)
 		{
-			if(lista[i].idCliente==idCte&& lista[i].isEmpty==0)
+			if(publicacion_get_idCte(lista[i])==idCte)
 			{
 				r=0;
-				publicacion_imprimirUno(&lista[i]);
+				publicacion_imprimirUno(lista[i]);
 			}
 		}
 	}
@@ -435,7 +426,7 @@ int publicacion_listarxCliente(sPublicacion* lista, int len, int idCte)
  * /return (-1)error (0)OK
  *
  */
-int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int len, int idCte)
+int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista[], int len, int idCte)
 {
 	int r=-1;
 	if(lista!=NULL &&len>0)
@@ -443,10 +434,11 @@ int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int
 
 		for(int i=0;i<len;i++)
 		{
-			if(lista[i].idCliente==idCte)
+			if(publicacion_get_idCte(lista[i])==idCte)
 			{
+				publicacion_delete(lista[i]);
+				lista[i]=NULL;
 				r=0;
-				lista[i].isEmpty=1;
 			}
 		}
 	}
@@ -463,7 +455,7 @@ int publicacion_removertodaslasPublicacionesdeUnCliente(sPublicacion* lista, int
  * /return (-1)error (la cantidad de publicacion de dichi cliente)OK
  *
  */
-int publicacion_contarCantidadAvisosPausadosuActivoxCliente(sPublicacion* lista, int len, int idCte,int estadoAbuscar)
+int publicacion_contarCantidadAvisosPausadosuActivoxCliente(sPublicacion* lista[], int len, int idCte,int estadoAbuscar)
 {
 	int r=-1;
 	if(lista!=NULL&& len>0 &&(estadoAbuscar==activa || estadoAbuscar==pausada || estadoAbuscar==3))
@@ -471,11 +463,11 @@ int publicacion_contarCantidadAvisosPausadosuActivoxCliente(sPublicacion* lista,
 		r=0;
 		for(int i=0;i<len;i++)
 		{
-			if((estadoAbuscar==0 || estadoAbuscar==1) && lista[i].idCliente==idCte && lista[i].isEmpty==0 && lista[i].estado==estadoAbuscar)
+			if((estadoAbuscar==0 || estadoAbuscar==1) && publicacion_get_idCte(lista[i])==idCte && publicacion_get_estado(lista[i])==estadoAbuscar)
 			{
 				r++;
 			}
-			else if(estadoAbuscar==3 && lista[i].idCliente==idCte && lista[i].isEmpty==0)
+			else if(estadoAbuscar==3 && publicacion_get_idCte(lista[i])==idCte)
 			{
 				r++;
 			}
@@ -493,7 +485,7 @@ int publicacion_contarCantidadAvisosPausadosuActivoxCliente(sPublicacion* lista,
  * /return (-1)error (la cantidad de publicacion en ese estado)OK
  *
  */
-int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado)
+int publicacion_contarActivasOpausadas(sPublicacion* lista[], int len, int estado)
 {
 	int r=-1;
 	if(lista!=NULL && len>0 && (estado==1||estado==0))
@@ -501,7 +493,7 @@ int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado)
 		r=0;
 		for(int i=0;i<len;i++)
 		{
-			if(lista[i].estado==estado &&lista[i].isEmpty==0)
+			if(publicacion_get_estado(lista[i])==estado)
 			{
 				r++;
 			}
@@ -519,7 +511,7 @@ int publicacion_contarActivasOpausadas(sPublicacion* lista, int len, int estado)
  * /return (-1)error (la cantidad de publicaciones de ese rubro)OK
  *
  */
-int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro)
+int publicacion_contarRubroConMasAvisos(sPublicacion* lista[], int len, int rubro)
 {
 	int r=-1;
 		if(lista!=NULL && len>0 && rubro>0)
@@ -527,7 +519,7 @@ int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro)
 			r=0;
 			for(int i=0;i<len;i++)
 			{
-				if(lista[i].numRubro==rubro&& lista[i].isEmpty==0)
+				if(publicacion_get_numRubro(lista[i])==rubro)
 				{
 					r++;
 				}
@@ -535,20 +527,70 @@ int publicacion_contarRubroConMasAvisos(sPublicacion* lista, int len, int rubro)
 		}
 		return r;
 }
-void publicacion_forzarPublicacion(sPublicacion* lista, int len)
+void publicacion_forzarPublicacion(sPublicacion* lista[], int len)
 {
-	publicacion_add(lista, len, publicacion_generarId(), 1, 2530,"algo 1");
-	publicacion_add(lista, len, publicacion_generarId(), 1, 2530,"algo 2");
-	publicacion_add(lista, len, publicacion_generarId(), 1, 2525,"algo 3");
-	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 4");
-	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 5");
-	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 6");
-	publicacion_add(lista, len, publicacion_generarId(), 2, 2530,"algo 7");
-	publicacion_add(lista, len, publicacion_generarId(), 3, 2530,"algo 8");
-	publicacion_add(lista, len, publicacion_generarId(), 3, 2525,"algo 9");
-	publicacion_add(lista, len, publicacion_generarId(), 3, 2530,"algo 10");
-	publicacion_add(lista, len, publicacion_generarId(), 4, 3100,"algo 11");
-	publicacion_add(lista, len, publicacion_generarId(), 4, 3100,"algo 12");
+	sPublicacion* nuevo;
+	nuevo=publicacion_new(publicacion_generarId(), 1, "algo 1", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 1, "algo 2", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 1, "algo 3", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 1, "algo 4", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 2, "algo 5", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 2, "algo 6", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 2, "algo 7", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 3, "algo 8", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 3, "algo 9", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 3, "algo 10", 2130, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 4, "algo 11", 2320, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+	nuevo=publicacion_new(publicacion_generarId(), 4, "algo 12", 2530, 1);
+	if(nuevo!=NULL)
+	{
+		publicacion_add(lista, len, nuevo);
+	}
+
 }
 int ordenarx2criterios(sPublicacion* list, int len, int order)
 {
@@ -580,4 +622,123 @@ int ordenarx2criterios(sPublicacion* list, int len, int order)
 		}
 		return r;
  return 0;
+}
+sPublicacion* publicacion_new(int id, int idCte, char* txtAviso, int rubro, int estado)
+{
+	sPublicacion* nuevo= (sPublicacion*)malloc(sizeof(sPublicacion));
+	if(nuevo!=NULL)
+	{
+		publicacion_set_id(nuevo, id);
+		publicacion_set_idCliente(nuevo, idCte);
+		publicacion_set_textodeAviso(nuevo, txtAviso);
+		publicacion_set_numRubro(nuevo, rubro);
+		publicacion_set_estado(nuevo, estado);
+	}
+	return nuevo;
+}
+int publicacion_set_id(sPublicacion* elemento, int id)
+{
+	int r=-1;
+	if(elemento!=NULL && id>0)
+	{
+		elemento->id=id;
+		r=0;
+	}
+	return r;
+}
+int publicacion_set_idCliente(sPublicacion* elemento, int idCliente)
+{
+	int r=-1;
+	if(elemento!=NULL && idCliente>0)
+	{
+		elemento->idCliente=idCliente;
+		r=0;
+	}
+	return r;
+}
+int publicacion_set_numRubro(sPublicacion* elemento, int numRubro)
+{
+	int r=-1;
+	if(elemento!=NULL && numRubro>0)
+	{
+		elemento->numRubro=numRubro;
+		r=0;
+	}
+	return r;
+}
+int publicacion_set_textodeAviso(sPublicacion* elemento, char* textodeAviso)
+{
+	int r=-1;
+	if(elemento!=NULL && strlen(textodeAviso)<=63)
+	{
+		strcpy(elemento->textodeAviso,textodeAviso);
+		r=0;
+	}
+	return r;
+}
+int publicacion_set_estado(sPublicacion* elemento, int estado)
+{
+	int r=-1;
+	if(elemento!=NULL && (estado==0||estado==1))
+	{
+		elemento->estado=estado;
+		r=0;
+	}
+	return r;
+}
+int publicacion_get_id(sPublicacion* elemento)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		r=elemento->id;
+	}
+	return r;
+}
+int publicacion_get_idCte(sPublicacion* elemento)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		r=elemento->idCliente;
+	}
+	return r;
+}
+int publicacion_get_textodeAviso(sPublicacion* elemento,char* textodeAviso)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		strcpy(textodeAviso,elemento->textodeAviso);
+		r=0;
+	}
+	return r;
+}
+int publicacion_get_numRubro(sPublicacion* elemento)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		r=elemento->numRubro;
+	}
+	return r;
+}
+int publicacion_get_estado(sPublicacion* elemento)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		r=elemento->estado;
+	}
+	return r;
+}
+int publicacion_delete(sPublicacion* elemento)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		free(elemento);
+		r=0;
+	}
+	return r;
 }

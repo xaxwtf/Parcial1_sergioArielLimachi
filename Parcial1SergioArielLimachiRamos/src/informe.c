@@ -19,10 +19,10 @@
  * /param sPublicacion* es el array de publicacion
  * /param int es el tamaño del array de publicacion
  *
- * /return (-1)error (0)OK
+ * /return
  *
  */
-void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
+void informar(sCliente* listaCte[], int lenCte, sPublicacion* listaPub[], int lenP)
 {
 	int opc=123;
 	do{
@@ -64,7 +64,7 @@ void informar(sCliente* listaCte, int lenCte, sPublicacion* listaPub, int lenP)
  * /return (-1)error (0)OK
  *
  */
-int informe_buscarClienteconmasAvisos(sCliente* listCte, int lenCte, sPublicacion* listP, int lenP)
+int informe_buscarClienteconmasAvisos(sCliente* listCte[], int lenCte, sPublicacion* listP[], int lenP)
 {
 	int r=-1;
 	sCliente cteMasAvisos;
@@ -72,17 +72,17 @@ int informe_buscarClienteconmasAvisos(sCliente* listCte, int lenCte, sPublicacio
 	if(listCte!=NULL && listP!=NULL && lenCte>0 &&lenP>0)
 	{
 		r=0;
-		cteMasAvisos=listCte[0];
-		cantdePublicacionesMax=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listP, lenP, listCte[0].id, 3);
+		cteMasAvisos=*listCte[0];
+		cantdePublicacionesMax=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listP, lenP, cliente_get_id(listCte[0]), 3);
 		for(int i=1;i<lenCte;i++)
 		{
-			if(!listCte[i].isEmpty)
+			if(listCte[i]!=NULL)
 			{
-				cantPublicaciones=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listP, lenP, listCte[0].id, 3);
+				cantPublicaciones=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listP, lenP, cliente_get_id(listCte[i]), 3);
 				if(cantdePublicacionesMax<cantPublicaciones)
 				{
 					cantdePublicacionesMax=cantPublicaciones;
-					cteMasAvisos=listCte[i];
+					cteMasAvisos=*listCte[i];
 				}
 			}
 
@@ -102,7 +102,7 @@ int informe_buscarClienteconmasAvisos(sCliente* listCte, int lenCte, sPublicacio
  * /return (-1)error (0)OK
  *
  */
-int informe_avisosPausados(sPublicacion* lista, int len)
+int informe_avisosPausados(sPublicacion* lista[], int len)
 {
 	int r=-1;
 	int cantAvisosPausados;
@@ -143,7 +143,7 @@ int informe_avisosActivos(sPublicacion* lista, int len)
  * /return (-1)error (0)OK
  *
  */
-int informe_rubroConMasAvisos(sPublicacion* lista, int len)
+int informe_rubroConMasAvisos(sPublicacion* lista[], int len)
 {
 	int r=-1;
 	sRubro listRubros[len];
@@ -202,7 +202,7 @@ int rubro_init(sRubro* lista, int len)
  * /return (-1)error (0)OK
  *
  */
-int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP, int len)
+int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP[], int len)
 {
 	int r=-1;
 	if(listaRubros!=NULL&& listaP!=NULL && len>0)
@@ -210,9 +210,9 @@ int informe_cargarListaRubro(sRubro* listaRubros, sPublicacion* listaP, int len)
 		r=0;
 		for(int i=0;i<len;i++)
 		{
-			if(rubro_noEstaEnlaLista(listaRubros, len, listaP[i].numRubro)&& listaP[i].isEmpty==0)
+			if(rubro_noEstaEnlaLista(listaRubros, len, publicacion_get_numRubro(listaP[i])))
 			{
-				rubro_add(listaRubros, len, listaP[i].numRubro);
+				rubro_add(listaRubros, len, publicacion_get_numRubro(listaP[i]));
 			}
 		}
 	}
@@ -306,37 +306,40 @@ int rubro_add(sRubro* lista, int len, int rubro)
  * /return (-1)error (0)OK
  *
  */
-int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte)
+int publicar(sPublicacion* lista[], int len, sCliente* listaCte[], int lenCte)
 {
 	int r=-1;
 	int todoOk=1;
-	sPublicacion aux;
-	if(lista!=NULL && len>0)
+	int indice;
+	sPublicacion *aux=publicacion_new(0, 0, " ", -1, -1);
+	if(lista!=NULL && len>0 && aux!=NULL)
 	{
 		if(publicacion_buscarLibreUocupado(lista, len,1)!=-1)
 		{
 			cliente_listar(listaCte, lenCte, lista, len);
-			if(todoOk==1 && (utn_getInt("\nindique un ID de algun Cliente","\nerror, el tipo no es valido", &aux.idCliente, 3, 1000, 1)|| cliente_buscarOcurrenciaId(listaCte, lenCte,aux.idCliente, &aux.numRubro)))
+			if(todoOk==1 && (utn_getInt("\nindique un ID de algun Cliente","\nerror, el tipo no es valido", &aux->idCliente, 3, 1000, 1)|| cliente_buscarOcurrenciaId(listaCte, lenCte, aux->idCliente, &indice)))
 			{
 				todoOk=0;
 			}
-			if(todoOk==1 && (utn_getInt("\nindique el Numero de Rubro:", "\nerror,rubro no valido", &aux.numRubro, 3, 999999999, 1)))
+			if(todoOk==1 && (utn_getInt("\nindique el Numero de Rubro:", "\nerror,rubro no valido", &aux->numRubro, 3, 999999999, 1)))
 			{
 				todoOk=0;
 			}
-			if(todoOk==1 && (utn_pedirCadenadeUndeunDeterminadoTam(aux.textodeAviso, "\nindique el Texto(no debe supera los 63 Caracteres):", 3, 63, 1)))
+			if(todoOk==1 && (utn_pedirCadenadeUndeunDeterminadoTam(aux->textodeAviso, "\nindique el Texto(no debe supera los 63 Caracteres):", 3, 63, 1)))
 			{
 				todoOk=0;
 			}
 			if(todoOk)
 			{
 				r=0;
-				aux.id=publicacion_generarId();
-				publicacion_add(lista, len,aux.id , aux.idCliente, aux.numRubro, aux.textodeAviso);
-				printf("\n Su Numero de ID es: %d",aux.id);
+				publicacion_set_id(aux, publicacion_generarId());
+				publicacion_set_estado(aux, 1);
+				publicacion_add(lista, len, aux);
+				printf("\n Su Numero de ID es: %d",aux->id);
 			}
 		}
 		else{
+			free(aux);
 			printf("\n !!!!Registro lleno, no se pueden cargar mas empleados");
 		}
 	}
@@ -354,7 +357,7 @@ int publicar(sPublicacion* lista, int len, sCliente* listaCte, int lenCte)
  * /return (-1)error (0)OK
  *
  */
-int informe_clienteConMasAvisosActivosUPausados(sPublicacion* listaP,int lenP, sCliente* listaCte, int lenCte, int estadoAbuscar)
+int informe_clienteConMasAvisosActivosUPausados(sPublicacion* listaP[],int lenP, sCliente* listaCte[], int lenCte, int estadoAbuscar)
 {
 	int r=-1;
 	int cantAvisosMax,cantAvisoAct;
@@ -362,18 +365,18 @@ int informe_clienteConMasAvisosActivosUPausados(sPublicacion* listaP,int lenP, s
 	if(listaP!=NULL&& listaCte!=NULL && lenCte>0 &&lenP && (estadoAbuscar==0 || estadoAbuscar==1))
 	{
 		r=0;
-		aux=listaCte[0];
-		cantAvisosMax=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, listaCte[0].id, estadoAbuscar);
+		aux=*listaCte[0];
+		cantAvisosMax=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, cliente_get_id(listaCte[0]), estadoAbuscar);
 		for(int i=1;i<lenCte;i++)
 		{
-			cantAvisoAct=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, listaCte[i].id, estadoAbuscar);
+			cantAvisoAct=publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, cliente_get_id(listaCte[i]), estadoAbuscar);
 			if(cantAvisoAct>cantAvisosMax)
 			{
-				aux=listaCte[i];
+				aux=*listaCte[i];
 				cantAvisosMax=cantAvisoAct;
 			}
 		}
-		if(estadoAbuscar&& cantAvisosMax>0)
+		if(estadoAbuscar && cantAvisosMax>0)
 		{
 			printf("\nel Cliente con mas Avisos Activos:   Cantidad De avisos %d",cantAvisosMax);
 			cliente_imprimirUnCliente(&aux);

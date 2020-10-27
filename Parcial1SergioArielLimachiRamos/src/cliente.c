@@ -22,7 +22,7 @@
  * /return (-1)error (0)OK
  *
  */
-int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP)
+int cliente_listar(sCliente* lista[], int len, sPublicacion* listaP[], int lenP)
 {
 	int r=-1;
 	if(lista!=NULL && len>0)
@@ -31,10 +31,10 @@ int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP)
 		printf("\n  ID\tlastName\t  Name\t\tCuit\t\tNumero de avisos Activos Publicados");
 		for(int i=0;i<len;i++)
 			{
-				if(!lista[i].isEmpty)
+				if(lista[i]!=NULL)
 				{
-					cliente_imprimirUnCliente(&lista[i]);
-					printf("\t\t%d",publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, lista[i].id, 1));
+					cliente_imprimirUnCliente(lista[i]);
+					printf("\t\t%d",publicacion_contarCantidadAvisosPausadosuActivoxCliente(listaP, lenP, lista[i]->id, 1));
 				}
 			}
 	}
@@ -48,15 +48,15 @@ int cliente_listar(sCliente* lista, int len, sPublicacion* listaP, int lenP)
  * /return (-1)error (0)OK
  *
  */
-int cliente_init(sCliente* lista, int len)
+int cliente_init(sCliente* lista[], int len,int aPartirDe)
 {
 	int r=-1;
-	if(lista!=NULL && len>0)
+	if(lista!=NULL && len>0 && aPartirDe>0)
 	{
 		r=0;
-		for(int i=0;i<len;i++)
+		for(int i=aPartirDe;i<len;i++)
 		{
-			lista[i].isEmpty=1;
+			lista[i]=NULL;
 		}
 	}
 	return r;
@@ -69,25 +69,26 @@ int cliente_init(sCliente* lista, int len)
  * /return (-1)error (0)OK
  *
  */
-int cliente_alta(sCliente* lista, int len)
+int cliente_alta(sCliente* lista[], int len)
 {
 	int r=-1;
 	int todoOk=1;
-	sCliente aux;
-	if(lista!=NULL && len>0)
+	sCliente* nuevo;
+	nuevo=cliente_new(-1,"00-00000000-0", " ", " ");
+	if(lista!=NULL && len>0 &&nuevo!=NULL)
 	{
-		if(cliente_buscarLibreUocupado(lista, len,1)!=-1)
-		{
 
-			if(todoOk==1 && (utn_pedir_cadena("\nindique Nombre: ", aux.name, tam_string)||utn_soloLetras(aux.name)))
+		if(cliente_buscarLibreUocupado(lista, len, 1)!=-1)
+		{
+			if(todoOk==1 && (utn_pedir_cadena("\nindique Nombre: ", nuevo->name, tam_string)||utn_soloLetras(nuevo->name)))
 			{
 				todoOk=0;
 			}
-			if(todoOk==1 && (utn_pedir_cadena("\nindique Apellido: ", aux.lastName, tam_string)||utn_soloLetras(aux.lastName)))
+			if(todoOk==1 && (utn_pedir_cadena("\nindique Apellido: ", nuevo->lastName, tam_string)||utn_soloLetras(nuevo->lastName)))
 			{
 				todoOk=0;
 			}
-			if(todoOk==1 && (utn_pedir_cadena("\nindique Cuit en este formato con -(xx-xxxxxxxx-x): ", aux.cuit, 15)||utn_esCuit(aux.cuit)))
+			if(todoOk==1 && (utn_pedir_cadena("\nindique Cuit en este formato con -(xx-xxxxxxxx-x): ", nuevo->cuit, 15)||utn_esCuit(nuevo->cuit)))
 			{
 				printf("\n no se cargo!!!!!!!!!!!!!!!!!");
 				todoOk=0;
@@ -95,11 +96,17 @@ int cliente_alta(sCliente* lista, int len)
 			if(todoOk)
 			{
 				r=0;
-				cliente_add(lista, len, cliente_generarId(), aux.name, aux.lastName, aux.cuit);
+				cliente_set_id(nuevo, cliente_generarId());
+				cliente_add(lista, len, nuevo);
+				printf("\ncliente cargado");
+			}
+			else{
+				free(nuevo);
+				printf("\nerror, el cliente no se ha cargado");
 			}
 		}
 		else{
-			printf("\n !!!!Registro lleno, no se pueden cargar mas clientes");
+			printf("\n no hay espacio para otro cliente");
 		}
 	}
 	return r;
@@ -113,7 +120,7 @@ int cliente_alta(sCliente* lista, int len)
  * /return (-1)error (0)OK
  *
  */
-int cliente_modificar(sCliente* lista,int len)
+int cliente_modificar(sCliente* lista[],int len)
 {
 	int r=-1;
 	sCliente aux,mod;
@@ -126,7 +133,7 @@ int cliente_modificar(sCliente* lista,int len)
 			if(!cliente_buscarOcurrenciaId(lista, len, aux.id, &indice))
 			{
 				r=0;
-				aux=lista[indice];
+				aux=*lista[indice];
 				do{
 					printf("\n-----MODIFICAR CLIENTE-----ID= %d "
 							"\n 1-Name:  %s"
@@ -168,7 +175,7 @@ int cliente_modificar(sCliente* lista,int len)
 						break;
 					case 5:
 						ok=0;
-						lista[indice]=aux;
+						*lista[indice]=aux;
 						break;
 					}
 				}while(ok);
@@ -191,20 +198,21 @@ int cliente_modificar(sCliente* lista,int len)
  * /return (-1)error (0)OK
  *
  */
-int cliente_baja(sCliente* lista, int len,sPublicacion* publicaciones, int lenP)
+int cliente_baja(sCliente* lista[], int len,sPublicacion* publicaciones[], int lenP)
 {
 	int r=-1;
-		sCliente aux;
-		int indice,opc;
+		sCliente* aux;
+		int indice,opc,idAux;
 		int ok=1;
+
 		if(lista!=NULL && len>0)
 		{
-			if(!utn_getInt("\nindique el numero de ID:", "\nError, el ID indicado esta fuera de rango",&aux.id , 3, 999999, 1))
+			if(!utn_getInt("\nindique el numero de ID:", "\nError, el ID indicado esta fuera de rango",&idAux , 3, 999999, 1))
 			{
-				if(!cliente_buscarOcurrenciaId(lista, len, aux.id, &indice))
+				if(!cliente_buscarOcurrenciaId(lista, len, idAux, &indice))
 				{
 					printf("  ID	IDcliente     Rubro   Estado  Texto");
-					publicacion_listarxCliente(publicaciones, lenP, aux.id);
+					publicacion_listarxCliente(publicaciones, lenP, idAux);
 					r=0;
 					aux=lista[indice];
 					do{
@@ -213,12 +221,12 @@ int cliente_baja(sCliente* lista, int len,sPublicacion* publicaciones, int lenP)
 								"\n Apellido: %s"
 								"\n Cuit: %s"
 								"\n 1-SI"
-								"\n 2-NO",aux.id,aux.name,aux.lastName,aux.cuit);
+								"\n 2-NO",aux->id,aux->name,aux->lastName,aux->cuit);
 						utn_getInt(" ", "la opcion indicada no es valida", &opc, 1, 2, 1);
 							switch(opc){
 							case 1:
-								publicacion_removertodaslasPublicacionesdeUnCliente(publicaciones, lenP, aux.id);
-								cliente_remove(lista, len, aux.id);
+								publicacion_removertodaslasPublicacionesdeUnCliente(publicaciones, lenP, aux->id);
+								cliente_remove(lista, len, idAux);
 								ok=0;
 								break;
 							case 2:
@@ -258,14 +266,14 @@ int cliente_generarId(void)
  * /return (-1)error (0)OK
  *
  */
-int cliente_buscarOcurrenciaId(sCliente* lista, int len, int id, int* indice)
+int cliente_buscarOcurrenciaId(sCliente* lista[], int len, int id, int* indice)
 {
 	int r=-1;
 	if(lista!=NULL && len>0 && id>0 && indice!=NULL)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(id==lista[i].id)
+			if(id==cliente_get_id(lista[i]))
 			{
 				r=0;
 				*indice=i;
@@ -286,14 +294,14 @@ int cliente_buscarOcurrenciaId(sCliente* lista, int len, int id, int* indice)
  * /return (-1)error (el indice de la pocicion donde encontro el ID)OK
  *
  */
-int cliente_buscarOcurrenciaIdv2(sCliente* lista, int len, int id)
+int cliente_buscarOcurrenciaIdv2(sCliente* lista[], int len, int id)
 {
 	int r=-1;
 	if(lista!=NULL && len>0 && id>0)
 	{
 		for(int i=0;i<len;i++)
 		{
-			if(id==lista[i].id)
+			if(id==cliente_get_id(lista[i]))
 			{
 				r=i;
 				break;
@@ -338,19 +346,17 @@ int cliente_ordenarxNombre(sCliente* lista, int len, int order)
 	}
 	return r;
 }
-int cliente_add(sCliente* list, int len, int id,char* name,char* lastName, char* cuit)
+int cliente_add(sCliente* lista[],int len, sCliente* cliente)
 {
 	int r=-1;
 	int indice;
-	if(list!=NULL && len>0 && id>0 && name!=NULL && lastName!=NULL && cuit!=NULL)
+	if(cliente!=NULL && lista!=NULL && len>0)
 	{
-		cliente_buscarLibreUocupadov2(list, len, 1, &indice);
-		list[indice].id=id;
-		list[indice].isEmpty=0;
-		strncpy(list[indice].name,name,tam_string);
-		strncpy(list[indice].lastName,lastName,tam_string);
-		strncpy(list[indice].cuit,cuit,13);
-		r=0;
+		if(!cliente_buscarLibreUocupadov2(lista, len, 1, &indice))
+		{
+			lista[indice]=cliente;
+			r=0;
+		}
 	}
  return r;
 }
@@ -364,12 +370,15 @@ int cliente_add(sCliente* list, int len, int id,char* name,char* lastName, char*
  * /return (-1)error (0)OK
  *
  */
-int cliente_remove(sCliente* list, int len, int id)
+int cliente_remove(sCliente* list[], int len, int id)
 {
 	int r=-1;
+	int indice;
 	if(list!=NULL && len>0 && id>0)
 	{
-		list[cliente_buscarOcurrenciaIdv2(list, len, id)].isEmpty=1;
+		indice=cliente_buscarOcurrenciaIdv2(list, len, id);
+		cliente_delete(list[indice]);
+		list[indice]=NULL;
 		r=0;
 	}
  return r;
@@ -383,14 +392,14 @@ int cliente_remove(sCliente* list, int len, int id)
  * /return (-1)error (el indice en donde econtro la 1ra concidencia)OK
  *
  */
-int cliente_buscarLibreUocupado(sCliente * lista, int len, int estado)
+int cliente_buscarLibreUocupado(sCliente * lista[], int len, int estado)
 {
 	int r=-1;
 		if(lista!=NULL && len>0&& (estado==1 || estado==0))
 		{
 			for(int i=0;i<len;i++)
 			{
-				if(lista[i].isEmpty==estado)
+				if((estado==1 && lista[i]==NULL)|| (estado==0 && lista!=NULL))
 				{
 					r=i;
 					break;
@@ -410,7 +419,7 @@ int cliente_buscarLibreUocupado(sCliente * lista, int len, int estado)
  * /return (-1)error (0)OK
  *
  */
-int cliente_buscarLibreUocupadov2(sCliente * lista, int len, int estado, int* indice)
+int cliente_buscarLibreUocupadov2(sCliente * lista[], int len, int estado, int* indice)
 {
 	int r=-1;
 		if(lista!=NULL && len>0&& (estado==1 || estado==0))
@@ -418,7 +427,7 @@ int cliente_buscarLibreUocupadov2(sCliente * lista, int len, int estado, int* in
 
 			for(int i=0;i<len;i++)
 			{
-				if(lista[i].isEmpty==estado)
+				if((estado==1 && lista[i]==NULL)|| (estado==0 && lista!=NULL))
 				{
 					r=0;
 					*indice=i;
@@ -455,17 +464,158 @@ int cliente_imprimirUnCliente(sCliente* cliente)
  * /return
  *
  */
-void Cliente_forzar5elementos(sCliente* lista, int len)
+void Cliente_forzar5elementos(sCliente* lista[], int len)
 {
-	char name[50]="aaaaaaa";
-	char apellido[50]="aaaaaaa";
-	char cuit[14]="00-00000000-0";
-
-	for(int i=0;i<5;i++)
+	sCliente* nuevo;
+	nuevo=cliente_new(cliente_generarId(), "11-11111111-1", "aaaa", "aaaa");
+	cliente_add(lista, len, nuevo);
+	nuevo=cliente_new(cliente_generarId(), "11-11111111-2", "aaab", "aaab");
+	cliente_add(lista, len, nuevo);
+	nuevo=cliente_new(cliente_generarId(), "11-11111111-3", "aaac", "aaac");
+	cliente_add(lista, len, nuevo);
+	nuevo=cliente_new(cliente_generarId(), "11-11111111-4", "aaad", "aaad");
+	cliente_add(lista, len, nuevo);
+	nuevo=cliente_new(cliente_generarId(), "11-11111111-5", "aaae", "aaae");
+	cliente_add(lista, len, nuevo);
+}
+sCliente* cliente_nuevaLista(int len)
+{
+	sCliente* list;
+	if(len>0)
 	{
-		utn_cambiarLetrasString(name, 7);
-		utn_cambiarLetrasString(apellido, 7);
-		utn_cambiarCaracteresCuit(cuit);
-		cliente_add(lista, len, cliente_generarId(), name, apellido, cuit);
+		list=(sCliente*)malloc(sizeof(sCliente)*len);
 	}
+	return list;
+}
+int cliente_redimencionarLista(sCliente* lista ,int len)
+{
+	int r=-1;
+	sCliente* aux;
+	if(lista!=NULL && len>0)
+	{
+		aux=(sCliente*)realloc(lista,sizeof(sCliente)*len);
+		if(aux!=NULL)
+		{
+			lista=aux;
+			r=0;
+		}
+	}
+	return r;
+}
+void cliente_listarTodo(sCliente* lista[], int len)
+{
+	for(int i=0;i<len;i++)
+	{
+		cliente_imprimirUnCliente(lista[i]);
+	}
+}
+void cliente_inicializarclientes(sCliente* lista, int len, int desde)
+{
+	for(int i=desde;i<len;i++)
+	{
+		lista[i].id=-1;
+		lista[i].isEmpty=1;
+		strcpy(lista[i].cuit,"nnn");
+		strcpy(lista[i].lastName,"vacio");
+	}
+}
+sCliente* cliente_new(int id, char* cuit, char* name, char* lastName)
+{
+	sCliente* nuevo=(sCliente*)malloc(sizeof(sCliente));
+	if(nuevo!=NULL && id>0)
+	{
+		cliente_set_id(nuevo, id);
+		cliente_set_cuit(nuevo, cuit);
+		cliente_set_name(nuevo, name);
+		cliente_set_lastName(nuevo, lastName);
+	}
+	return nuevo;
+}
+int cliente_delete(sCliente* cte)
+{
+	int r=-1;
+	if(cte!=NULL)
+	{
+		free(cte);
+		r=0;
+	}
+	return r;
+}
+int cliente_get_id(sCliente* elemento)
+{
+	int r=-1;
+	if(elemento!=NULL)
+	{
+		r=elemento->id;
+	}
+	return r;
+}
+int cliente_get_name(sCliente* elemento, char* name)
+{
+	int r=-1;
+	if(elemento!=NULL && name!=NULL)
+	{
+		r=0;
+		strcpy(name,elemento->name);
+	}
+	return r;
+}
+int cliente_get_lastName(sCliente* elemento, char* lastName)
+{
+	int r=-1;
+	if(elemento!=NULL&& lastName!=NULL)
+	{
+		r=0;
+		strcpy(lastName,elemento->lastName);
+	}
+	return r;
+}
+int cliente_get_cuit(sCliente* elemento, char* cuit)
+{
+	int r=-1;
+	if(elemento!=NULL && cuit!=NULL)
+	{
+		r=0;
+		strcpy(cuit,elemento->cuit);
+	}
+	return r;
+}
+int cliente_set_id(sCliente* elemento, int id)
+{
+	int r=-1;
+	if(elemento!=NULL && id>0)
+	{
+		elemento->id=id;
+	}
+	return r;
+}
+int cliente_set_name(sCliente* elemento, char* name)
+{
+	int r=-1;
+	if(elemento!=NULL && utn_soloLetras(name)==0)
+	{
+		strcpy(elemento->name,name);
+		r=0;
+	}
+	return r;
+}
+int cliente_set_lastName(sCliente* elemento, char* lastName)
+{
+	int r=-1;
+	if(elemento!=NULL && utn_soloLetras(lastName)==0)
+	{
+		strcpy(elemento->lastName,lastName);
+		r=0;
+	}
+	return r;
+}
+int cliente_set_cuit(sCliente* elemento, char* cuit)
+{
+	int r=-1;
+	if(elemento!=NULL && utn_esCuit(cuit)==0)
+	{
+		strcpy(elemento->cuit,cuit);
+		r=0;
+	}
+	return r;
 }

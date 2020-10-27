@@ -14,16 +14,16 @@
 #include "cliente.h"
 #include "publicacion.h"
 #include "informe.h"
-#define TAM_ctes 100
+#define TAM_cte 100
 #define TAM_pub 1000
 
 int main(void) {
-	sCliente clientes[TAM_ctes];
-	sPublicacion publicaciones[TAM_pub];
+	sCliente* clientes[TAM_cte];
+	sPublicacion* publicaciones[TAM_pub];
 	int opc=123;
 	publicacion_init(publicaciones, TAM_pub);
-	cliente_init(clientes, TAM_ctes);
-	Cliente_forzar5elementos(clientes, TAM_ctes);
+	cliente_init(clientes, TAM_cte, 0);
+	Cliente_forzar5elementos(clientes, TAM_cte);
 	publicacion_forzarPublicacion(publicaciones, TAM_pub);
 	do{
 		utn_getInt("\n-----Parcial-----"
@@ -36,34 +36,34 @@ int main(void) {
 					"\n 7-Imprimir Clientes"
 					"\n 8-Informar"
 					"\n 9-listar Publicaciones"
-					"\n 0-salir", "error,la opcion indicada no es valido", &opc, 1, 9, 0);
+					"\n 0-salir", "error,la opcion indicada no es valido", &opc, 1, 10, 0);
 			switch(opc)
 			{
 				case 1:
-					cliente_alta(clientes, TAM_ctes);
+					cliente_alta(clientes, TAM_cte);
 					break;
 				case 2:
-					if(cliente_buscarLibreUocupado(clientes, TAM_ctes, 0)!=-1)
+					if(cliente_buscarLibreUocupado(clientes, TAM_cte, 0)!=-1)
 					{
-						cliente_modificar(clientes, TAM_ctes);
+						cliente_modificar(clientes, TAM_cte);
 					}
 					else{
 						printf("error, no hay datos Cargados");
 					}
 					break;
 				case 3:
-					if(cliente_buscarLibreUocupado(clientes, TAM_ctes, 0)!=-1)
+					if(cliente_buscarLibreUocupado(clientes, TAM_cte, 0)!=-1)
 					{
-						cliente_baja(clientes, TAM_ctes, publicaciones, TAM_pub);
+						cliente_baja(clientes, TAM_cte, publicaciones, TAM_pub);
 					}
 					else{
 						printf("error, no hay datos Cargados");
 					}
 					break;
 				case 4:
-					if(cliente_buscarLibreUocupado(clientes, TAM_ctes, 0)!=-1)
+					if(cliente_buscarLibreUocupado(clientes, TAM_cte, 0)!=-1)
 					{
-						publicar(publicaciones, TAM_pub, clientes, TAM_ctes);
+						publicar(publicaciones, TAM_pub, clientes, TAM_cte);
 					}
 					else{
 						printf("\nerror, no hay datos Cargados");
@@ -88,9 +88,9 @@ int main(void) {
 					}
 					break;
 				case 7:
-					if(cliente_buscarLibreUocupado(clientes, TAM_ctes, 0)!=-1)
+					if(cliente_buscarLibreUocupado(clientes, TAM_cte, 0)!=-1)
 					{
-						cliente_listar(clientes, TAM_ctes, publicaciones, TAM_pub);
+						cliente_listar(clientes, TAM_cte, publicaciones, TAM_pub);
 					}
 					else{
 						printf("\n Error, no hay datos Cargados");
@@ -100,7 +100,7 @@ int main(void) {
 				case 8:
 					if(publicacion_buscarLibreUocupado(publicaciones, TAM_pub, 0)!=-1)
 					{
-						informar(clientes, TAM_ctes, publicaciones, TAM_pub);
+						informar(clientes, TAM_cte, publicaciones, TAM_pub);
 					}
 					else{
 						printf("\nno hay datos Cargados");
@@ -114,6 +114,10 @@ int main(void) {
 					else{
 						printf("\n Error, no hay datos Cargados");
 					}
+					break;
+				case 10:
+					cliente_listarTodo(clientes, TAM_cte);
+					printf("\ntamaño: %d",TAM_cte);
 					break;
 			}
 	}while(opc!=0);
