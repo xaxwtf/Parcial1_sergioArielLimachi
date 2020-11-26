@@ -4,3 +4,5 @@ id,idCliente,cantAfiches,nombrearchivodeImagen,zona,estado
 3,1,300,yyy.img,CABA,1
 4,2,700,lll.img,CABA,1
 5,3,800,KKK.IMG,ZONA OESTE,1
+6,3,900,zug.img,ZONA SUR,1
+7,4,1000,ppp.img,CABA,1

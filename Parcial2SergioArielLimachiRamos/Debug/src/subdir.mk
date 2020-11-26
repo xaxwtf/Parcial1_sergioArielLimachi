@@ -9,6 +9,7 @@ C_SRCS += \
 ../src/afiche.c \
 ../src/cliente.c \
 ../src/control.c \
+../src/informe.c \
 ../src/parser.c \
 ../src/utn.c 
 
@@ -18,6 +19,7 @@ OBJS += \
 ./src/afiche.o \
 ./src/cliente.o \
 ./src/control.o \
+./src/informe.o \
 ./src/parser.o \
 ./src/utn.o 
 
@@ -27,6 +29,7 @@ C_DEPS += \
 ./src/afiche.d \
 ./src/cliente.d \
 ./src/control.d \
+./src/informe.d \
 ./src/parser.d \
 ./src/utn.d 
 

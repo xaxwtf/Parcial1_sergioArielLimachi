@@ -1,6 +1,6 @@
 src/Parcial2SergioArielLimachiRamos.o: \
  ../src/Parcial2SergioArielLimachiRamos.c ../src/LinkedList.h \
- ../src/utn.h ../src/control.h ../src/parser.h
+ ../src/utn.h ../src/control.h ../src/parser.h ../src/informe.h
 
 ../src/LinkedList.h:
 
@@ -9,3 +9,5 @@ src/Parcial2SergioArielLimachiRamos.o: \
 ../src/control.h:
 
 ../src/parser.h:
+
+../src/informe.h:

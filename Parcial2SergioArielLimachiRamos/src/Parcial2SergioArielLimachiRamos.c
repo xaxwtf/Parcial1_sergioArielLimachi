@@ -14,6 +14,7 @@
 #include "utn.h"
 #include "control.h"
 #include "parser.h"
+#include "informe.h"
 int main(void) {
 	int opc;
 	LinkedList* clientes;
@@ -31,12 +32,13 @@ int main(void) {
 				"5-Generar informe de cobros\n"
 				"6-Generar informe de deudas\n"
 				"7-Generar estadísticas\n"
-				"8-guardar los cambios en archivo", "Error,la opcion indicada no es valida", &opc, 1, 999, 1);
+				"8-Listar Clientes\n"
+				"9-Listar Ventas\n", "Error,la opcion indicada no es valida", &opc, 1, 9, 1);
 		switch(opc)
 		{
 			case 1:
 				control_alta_cliente(clientes);
-				//control_guardar_clientesEnArchivoText(clientes, "clientes.csv");
+				control_guardar_clientesEnArchivoText(clientes, "clientes.csv");
 				break;
 			case 2:
 				if(ll_isEmpty(clientes))
@@ -45,7 +47,7 @@ int main(void) {
 				}
 				else{
 					control_vender_afiche(clientes, afiches);
-					//control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
+					control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
 				}
 				break;
 			case 3:
@@ -55,7 +57,7 @@ int main(void) {
 				}
 				else{
 					control_modificar_ventaAfiche(afiches, clientes);
-					//control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
+					control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
 
 				}
 				break;
@@ -66,7 +68,7 @@ int main(void) {
 				}
 				else{
 					control_cobrar_ventaAfiche(afiches, clientes);
-					//control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
+					control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
 				}
 
 				break;
@@ -94,15 +96,28 @@ int main(void) {
 					printf("no hay datos  suficientes cargados!!!\n");
 				}
 				else{
-					control_generar_Estadisticas(clientes, afiches);
+					informe_generar_Estadisticas(clientes, afiches);
 				}
 				break;
 			case 8:
-				control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
-				control_guardar_clientesEnArchivoText(clientes, "clientes.csv");
+				//control_guardar_afichesEnArchivoText(afiches, "ventas.csv");
+				//control_guardar_clientesEnArchivoText(clientes, "clientes.csv");
+				if(ll_isEmpty(clientes))
+				{
+					printf("no hay datos cargados\n");
+				}
+				else{
+					control_listar_clientes(clientes);
+				}
 				break;
 			case 9:
-				control_listar_clientes(clientes);
+				if(ll_isEmpty(afiches))
+				{
+					printf("no hay dato cargados\n");
+				}
+				else{
+					control_listar_afiches(afiches);
+				}
 				break;
 
 		}

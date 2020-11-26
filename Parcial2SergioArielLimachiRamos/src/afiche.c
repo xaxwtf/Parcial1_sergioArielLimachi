@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include "afiche.h"
 int afiche_set_id(sAfiche* this, int id)
 {
@@ -247,7 +248,7 @@ int afiche_cobrar_buscandoxId(void* this,void* this2)
 	int id=*((int*)this2);
 	if(this!=NULL && this2!=NULL)
 	{
-		if(afiche_get_id(aux)==id && afiche_get_estado(aux)==0)
+		if(afiche_get_id(aux)==id)
 		{
 			r=1;
 		}

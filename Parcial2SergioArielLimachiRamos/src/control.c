@@ -14,8 +14,8 @@
 #include "control.h"
 #include "parser.h"
 
-#define tam_str_cte 50
-#define tam_str_afiche 50
+#define tam_str_cte 60
+#define tam_str_afiche 60
 
 int control_alta_cliente(LinkedList* lista)
 {
@@ -44,7 +44,7 @@ int control_alta_cliente(LinkedList* lista)
 			if(nuevo!=NULL)
 			{
 				ll_add(lista, nuevo);
-				printf("\ncliente cargado");
+				printf("\ncliente cargado\n");
 				r=0;
 			}
 		}
@@ -95,7 +95,7 @@ int control_vender_afiche(LinkedList* clientes, LinkedList* afiches)
 			if(nuevo!=NULL)
 			{
 				ll_add(afiches, nuevo);
-				printf("\ncliente cargado");
+				printf("\nVenta Cargada\n");
 				r=0;
 			}
 		}
@@ -168,30 +168,31 @@ int control_modificar_ventaAfiche(LinkedList* afiches,LinkedList* clientes)
 						switch(opc)
 						{
 							case 1:
-								if(!utn_getInt("indique el idCliente: ", "error, el id ingresado no es valido", &mod.idCliente, 1, 99999999, 1)&&(ll_search(clientes, cliente_esCiertoId, &mod.idCliente)!=-1))
+								if(!utn_getInt("indique el idCliente: \n", "error, el id ingresado no es valido\n", &mod.idCliente, 1, 99999999, 1)&&(ll_search(clientes, cliente_esCiertoId, &mod.idCliente)!=-1))
 								{
 									afiche_set_idCliente(&aux, mod.idCliente);
 								}
 								break;
 							case 2:
-								if(!utn_getInt("indique la cantidad de afiches: ", "error, el numero ingresado no es valido", &mod.cantAfiches, 1, 99999999, 1))
+								if(!utn_getInt("indique la cantidad de afiches: \n", "error, el numero ingresado no es valido\n", &mod.cantAfiches, 1, 99999999, 1))
 								{
 									afiche_set_cantAfiches(&aux, mod.cantAfiches);
 								}
 								break;
 							case 3:
-								if(!utn_pedir_cadena("indique el nombre del archivo de la imagen afiche:", mod.dirImagen, tam_str_afiche))
+								if(!utn_pedir_cadena("indique el nombre del archivo de la imagen afiche:\n", mod.dirImagen, tam_str_afiche))
 								{
 									afiche_set_dirImagen(&aux, mod.dirImagen);
 								}
 								break;
 							case 4:
-								if(!utn_pedir_cadena("indique el nombre de la zona:", mod.zona, tam_str_afiche))
+								if(!utn_pedir_cadena("indique el nombre de la zona:\n", mod.zona, tam_str_afiche))
 								{
 									afiche_set_zona(&aux, mod.zona);
 								}
 								break;
 							case 5:
+								printf("La Venta ha sido modificada con exito\n");
 								*pAfiche=aux;
 								opc=-1;
 								break;
@@ -204,6 +205,9 @@ int control_modificar_ventaAfiche(LinkedList* afiches,LinkedList* clientes)
 				else{
 					printf("error, no se puede modificar un afiche ya cobrado!!!\n");
 				}
+			}
+			else{
+				printf("el id de venta ingresado no existe!!!!!\n");
 			}
 		}
 		r=0;
@@ -353,126 +357,4 @@ int control_generar_informeDeudas(LinkedList* clientes,LinkedList* afiches,char*
 
 	return r;
 }
-int control_generar_Estadisticas(LinkedList* clientes,LinkedList* afiches)
-{
-	int r=-1;
-	int max,min,aux,cantAMax,indice;
-	sCliente* clienteAux;
-	sAfiche* aficheAux;
-	if(clientes!=NULL && afiches!=NULL)
-	{
-		control_calcularCantidadMaxdeAfichesCobradosdeLalistaxCliente(clientes, afiches, &max);
-		control_calcularCantidadMindeAfichesCobradosdeLalistaxCliente(clientes, afiches, &min);
-		control_buscarCantidadMaximadeAfichesxVenta(afiches, &cantAMax);
-		printf("\nCliente al que mas afiches se le ha cobrado   CANT. AFICHES: %d \n"
-				"ID \tNOMBRE \t APELLIDO \tCUIT\n",max);
-		for(int i=0;i<ll_len(clientes);i++)
-		{
-			clienteAux=(sCliente*)ll_get(clientes, i);
-			ll_reduceIntII(afiches, afiche_esCiertoIdClienteYestaCobrado, &clienteAux->id, &aux);
-			if(max==aux)
-			{
-				cliente_imprimirUnElemento(clienteAux);
-			}
-		}
-		printf("\nCliente al que menos afiches se le ha cobrado   CANT. AFICHES: %d \n"
-						"ID     NOMBRE       APELLIDO      CUIT\n",min);
-		for(int i=0;i<ll_len(clientes);i++)
-		{
-			clienteAux=(sCliente*)ll_get(clientes, i);
-			ll_reduceIntII(afiches, afiche_esCiertoIdClienteYestaCobrado, &clienteAux->id, &aux);
-			if(min==aux)
-			{
-				cliente_imprimirUnElemento(clienteAux);
-			}
-		}
-		printf("VENTA CON MAS AFICHES VENDIDOS: CANT. AFICHES: %d\n",cantAMax);
-		for(int i=0;i<ll_len(afiches);i++)
-		{
-			aficheAux=(sAfiche*)ll_get(afiches, i);
-			if(afiche_get_cantAfiches(aficheAux)==cantAMax)
-			{
-				indice=ll_search(clientes, cliente_esCiertoId, &aficheAux->idCliente);
-				clienteAux=ll_get(clientes, indice);
-				printf("id_Venta %d\n"
-						"cuit_Cliente: %s\n"
-						"\\\\\\\\\\\\\\\\\\\n",afiche_get_id(aficheAux),cliente_get_cuit(clienteAux));
-			}
-		}
 
-	}
-	return r;
-}
-int control_calcularCantidadMaxdeAfichesCobradosdeLalistaxCliente(LinkedList* clientes, LinkedList* ventas ,int* resultado)
-{
-	int r=-1;
-	sCliente* aux;
-	int max,act;
-	if(clientes!=NULL && ventas!=NULL)
-	{
-		aux=ll_get(clientes, 0);
-		ll_reduceIntII(ventas, afiche_esCiertoIdClienteYestaCobrado,&aux->id, &max);
-		for(int i=1;i<ll_len(clientes);i++)
-		{
-			aux=ll_get(clientes, i);
-			ll_reduceIntII(ventas, afiche_esCiertoIdClienteYestaCobrado,&aux->id, &act);
-			if(act>max)
-			{
-				max=act;
-			}
-		}
-		*resultado=max;
-		r=0;
-	}
-	return r;
-}
-int control_calcularCantidadMindeAfichesCobradosdeLalistaxCliente(LinkedList* clientes, LinkedList* ventas ,int* resultado)
-{
-	int r=-1;
-	sCliente* aux;
-	int min,act;
-	if(clientes!=NULL && ventas!=NULL)
-	{
-		aux=ll_get(clientes, 0);
-		ll_reduceIntII(ventas, afiche_esCiertoIdClienteYestaCobrado,&aux->id, &min);
-		for(int i=1;i<ll_len(clientes);i++)
-		{
-			aux=ll_get(clientes, i);
-			ll_reduceIntII(ventas, afiche_esCiertoIdClienteYestaCobrado,&aux->id, &act);
-			if(act<min)
-			{
-				min=act;
-			}
-		}
-		*resultado=min;
-		r=0;
-	}
-	return r;
-}
-int control_buscarCantidadMaximadeAfichesxVenta(LinkedList* ventas, int* resultado)
-{
-	int r=-1;
-	int max;
-	sAfiche* pAfiche;
-	if(ventas!=NULL)
-	{
-		pAfiche=(sAfiche*)ll_get(ventas, 0);
-		max=afiche_get_cantAfiches(pAfiche);
-		for(int i=1;i<ll_len(ventas);i++)
-		{
-			pAfiche=(sAfiche*)ll_get(ventas, i);
-			printf("el maximo es %d  y el actual es %d",max,pAfiche->cantAfiches);
-			if(afiche_get_cantAfiches(pAfiche)>max)
-			{
-				max=afiche_get_cantAfiches(pAfiche);
-				printf("es mayor al maximo\n");
-			}
-			else{
-				printf("error\n");
-			}
-		}
-		*resultado=max;
-		r=0;
-	}
-	return r;
-}

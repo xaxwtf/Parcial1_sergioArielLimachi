@@ -24,11 +24,5 @@ int control_guardar_afichesEnArchivoText(LinkedList* lista,char* patch);
 int control_generar_informeCobros(LinkedList* clientes,LinkedList* afiches,char* patch);
 int control_generar_informeDeudas(LinkedList* clientes,LinkedList* afiches,char* patch);
 
-int control_generar_Estadisticas(LinkedList* clientes,LinkedList* afiches);
-
-int control_calcularCantidadMaxdeAfichesCobradosdeLalistaxCliente(LinkedList* clientes, LinkedList* ventas ,int* resultado);
-int control_calcularCantidadMindeAfichesCobradosdeLalistaxCliente(LinkedList* clientes, LinkedList* ventas ,int* resultado);
-
-int control_buscarCantidadMaximadeAfichesxVenta(LinkedList* ventas, int* resultado);
 
 #endif /* CONTROL_H_ */
